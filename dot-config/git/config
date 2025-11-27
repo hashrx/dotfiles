@@ -44,10 +44,12 @@
   autoSetupRemote = true
   default = simple
   followTags = true
+[rebase]
+  updateRefs = true
 [rerere]
   enabled = true
 [alias]
-  amend = commit --amend
+  amend = branchless amend
   c = commit
   co = checkout
   cp = "cherry-pick";
@@ -60,3 +62,10 @@
   s = "!git add -A; git status"
   st = status
   unstage = restore --staged
+  wip = commit -m 'RESET ME [skip ci]' -n --allow-empty
+[branchless "next"]
+	interactive = true
+[branchless "restack"]
+	preserveTimestamps = true
+[branchless "core"]
+	mainBranch = main
