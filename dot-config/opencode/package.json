@@ -1,0 +1,22 @@
+{
+  "name": "opencode-config",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "bun test tests/*.test.ts",
+    "test:watch": "bun test --watch tests/*.test.ts",
+    "test:git": "bun test tests/git-commit.test.ts",
+    "test:build": "bun test tests/build-test.test.ts",
+    "typecheck": "bun --bun tsc --noEmit",
+    "typecheck:watch": "bun --bun tsc --noEmit --watch",
+    "check": "bun run test && bun run typecheck",
+    "check:watch": "bun run typecheck:watch & bun run test:watch"
+  },
+  "dependencies": {
+    "@opencode-ai/plugin": "1.0.114"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "typescript": "^5.3.3"
+  },
+  "packageManager": "pnpm@10.22.0+sha512.bf049efe995b28f527fd2b41ae0474ce29186f7edcb3bf545087bd61fbbebb2bf75362d1307fda09c2d288e1e499787ac12d4fcb617a974718a6051f2eee741c"
+}
