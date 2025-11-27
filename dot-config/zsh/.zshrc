@@ -14,6 +14,7 @@ export EDITOR="nvim"
 export LESSOPEN='|~/.lessfilter %s'
 export CLICOLOR=1
 export TURBO_UI=true
+export AWS_PROFILE="ClaudeCode"
 
 eval "$(starship init zsh)"
 
@@ -98,3 +99,20 @@ function zvm_after_lazy_keybindings() {
     eval "zvm_bindkey visual '^g${o[1]}' fzf-git-$o-widget"
   done
 }
+
+function repo() {
+  if ! git_root="$(git rev-parse --show-toplevel 2>/dev/null)"; then
+    echo "Not a git repository" >&2
+    return 1
+  fi
+
+  cd "$git_root"
+}
+
+# pnpm
+export PNPM_HOME="/Users/maxime.doury/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
