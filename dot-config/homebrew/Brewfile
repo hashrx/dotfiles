@@ -1,6 +1,8 @@
 tap "felixkratz/formulae"
 tap "nikitabobko/tap"
 tap "oven-sh/bun"
+# Official Amazon AWS command-line interface
+brew "awscli"
 # Programmable completion for Bash 3.2
 brew "bash-completion"
 # Clone of cat(1) with syntax highlighting and Git integration
@@ -17,6 +19,10 @@ brew "fnm"
 brew "fzf"
 # GitHub command-line tool
 brew "gh"
+# Automatic git commit --fixup
+brew "git-absorb"
+# High-velocity, monorepo-scale workflow for Git
+brew "git-branchless"
 # Syntax-highlighting pager for git and diff output
 brew "git-delta"
 # Command-line benchmarking tool
@@ -31,6 +37,8 @@ brew "lesspipe"
 brew "neovim"
 # Modern shell for the GitHub era
 brew "nushell"
+# AI coding agent, built for the terminal
+brew "opencode"
 # Search tool like grep and The Silver Searcher
 brew "ripgrep"
 # Cross-shell prompt for astronauts
@@ -59,6 +67,8 @@ brew "oven-sh/bun/bun"
 cask "1password-cli"
 # AeroSpace is an i3-like tiling window manager for macOS
 cask "aerospace"
+# Chromium based browser
+cask "arc"
 # Colemak mod for more comfortable typing (DH variant)
 cask "colemak-dh"
 cask "font-geist-mono-nerd-font"
@@ -70,5 +80,7 @@ cask "hiddenbar"
 cask "mos"
 # Control your tools with a few keystrokes
 cask "raycast"
+# Binary releases of VS Code without MS branding/telemetry/licensing
+cask "vscodium"
 # Gecko based web browser
-cask "zen-browser"
+cask "zen"
