@@ -22,6 +22,8 @@ source "$HOME/.config/zsh/.zshenv"
 exec zsh
 echo "✅ zsh config reloaded"
 
+echo "🛠️ installing opencode tool dependencies..."
+
 echo "🛠️ installing homebrew packages..."
 "$HOME/.local/bin/brew-setup"
 echo "✅ homebrew packages installed"
