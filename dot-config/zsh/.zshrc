@@ -16,7 +16,7 @@ export CLICOLOR=1
 export TURBO_UI=true
 export AWS_PROFILE="ClaudeCode"
 
-zsh-defer eval "$(starship init zsh)"
+eval "$(starship init zsh)"
 
 zstyle ':completion:*:descriptions' format '[%d]'
 zstyle ':completion:*:git-checkout:*' sort false
@@ -50,7 +50,7 @@ zsh-defer eval "$(zoxide init zsh)"
 zsh-defer zle -N up-line-or-beginning-search
 zsh-defer zle -N down-line-or-beginning-search
 
-zsh-defer compinit -d $XDG_STATE_HOME/zsh_completion
+zsh-defer compinit -u -d $XDG_STATE_HOME/zsh_completion
 zsh-defer source "$XDG_CONFIG_HOME/zsh/plugins/fzf-tab/fzf-tab.plugin.zsh"
 zsh-defer source "$XDG_CONFIG_HOME/zsh/plugins/fzf-git/fzf-git.sh"
 
