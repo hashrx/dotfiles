@@ -9,6 +9,8 @@
 source $"($nu.cache-dir)/carapace.nu"
 
 # Source zoxide (smart directory jumping)
+# Requires: zoxide init nushell > ~/.zoxide.nu
+# Note: nushell's `source` requires literal paths, conditional sourcing is not supported
 source ~/.zoxide.nu
 
 # Disable welcome banner
@@ -28,7 +30,8 @@ $env.config.cursor_shape = {
 # Starship Prompt
 ##
 # Starship prompt integration
-# The init file should exist at ~/.cache/starship/init.nu
+# Requires: starship init nu > ~/.cache/starship/init.nu
+# Note: nushell's `source` requires literal paths, conditional sourcing is not supported
 # We've disabled starship's character module to use Nushell's vi-mode aware indicators
 source ~/.cache/starship/init.nu
 
@@ -161,7 +164,7 @@ $env.config.keybindings ++= [
             {
                 send: ExecuteHostCommand
                 cmd: "do {
-                    $env.SHELL = '/opt/homebrew/bin/bash'
+                    $env.SHELL = $'($env.HOMEBREW_PREFIX)/bin/bash'
                     commandline edit --insert (
                         history
                         | get command

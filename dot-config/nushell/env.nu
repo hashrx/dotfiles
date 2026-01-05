@@ -8,13 +8,16 @@
 ##
 # Homebrew environment
 ##
-# Initialize Homebrew environment
-$env.HOMEBREW_PREFIX = "/opt/homebrew"
-$env.HOMEBREW_CELLAR = "/opt/homebrew/Cellar"
-$env.HOMEBREW_REPOSITORY = "/opt/homebrew"
-$env.MANPATH = $"/opt/homebrew/share/man($env.MANPATH? | default '' | prepend ':')"
-$env.INFOPATH = $"/opt/homebrew/share/info($env.INFOPATH? | default '' | prepend ':')"
-$env.GIT_UNSTCK_PATH = "/Users/maxime.doury/Developer/experiments/git-unstck/zig-out/bin"
+# Detect Homebrew prefix based on architecture
+$env.HOMEBREW_PREFIX = if ("/opt/homebrew" | path exists) {
+    "/opt/homebrew"
+} else {
+    "/usr/local"
+}
+$env.HOMEBREW_CELLAR = ($env.HOMEBREW_PREFIX | path join "Cellar")
+$env.HOMEBREW_REPOSITORY = $env.HOMEBREW_PREFIX
+$env.MANPATH = $"($env.HOMEBREW_PREFIX)/share/man($env.MANPATH? | default '' | prepend ':')"
+$env.INFOPATH = $"($env.HOMEBREW_PREFIX)/share/info($env.INFOPATH? | default '' | prepend ':')"
 
 ##
 # Define the path to the dotfiles directory
@@ -92,9 +95,8 @@ $env.PATH = (
     | split row (char esep)
     | prepend $env.XDG_BIN_HOME
     | prepend ($env.CARGO_HOME | path join "bin")
-    | prepend "/opt/homebrew/bin"
-    | prepend "/opt/homebrew/sbin"
-    | prepend $env.GIT_UNSTCK_PATH
+    | prepend ($env.HOMEBREW_PREFIX | path join "bin")
+    | prepend ($env.HOMEBREW_PREFIX | path join "sbin")
     | uniq
 )
 
@@ -108,17 +110,23 @@ $env.PATH = ($env.PATH | prepend $env.PNPM_HOME | uniq)
 # fnm (Fast Node Manager) configuration
 ##
 # Load all fnm environment variables at once
-fnm env --json | from json | load-env
-$env.PATH = ($env.PATH | prepend ($env.FNM_MULTISHELL_PATH | path join "bin") | uniq)
+if (which fnm | is-not-empty) {
+    fnm env --json | from json | load-env
+    $env.PATH = ($env.PATH | prepend ($env.FNM_MULTISHELL_PATH | path join "bin") | uniq)
+}
 
 ##
 # LS_COLORS configuration with vivid
 ##
-$env.LS_COLORS = (vivid generate tokyonight-night)
+if (which vivid | is-not-empty) {
+    $env.LS_COLORS = (vivid generate tokyonight-night)
+}
 
 ##
 # Carapace completion setup
 ##
 $env.CARAPACE_BRIDGES = 'zsh,fish,bash,inshellisense'
-mkdir ($nu.cache-dir)
-carapace _carapace nushell | save --force $"($nu.cache-dir)/carapace.nu"
+if (which carapace | is-not-empty) {
+    mkdir ($nu.cache-dir)
+    carapace _carapace nushell | save --force $"($nu.cache-dir)/carapace.nu"
+}
