@@ -1,3 +1,5 @@
+#!/usr/bin/env zsh
+
 echo "🛠️ installing stow..."
 eval "$(/opt/homebrew/bin/brew shellenv)"
 brew install stow
@@ -14,14 +16,11 @@ mkdir -p "$HOME/.config" "$HOME/.local/state" "$HOME/.local/share" "$HOME/.local
 echo "✅ base directories created"
 
 echo "🛠️ creating symlinks..."
-make -f "$HOME/.dotfiles/Makefile"
+make -C "$HOME/.dotfiles"
 echo "✅ symlink created"
-
-echo "🛠️ reloading zsh config..."
-source "$HOME/.config/zsh/.zshenv"
-exec zsh
-echo "✅ zsh config reloaded"
 
 echo "🛠️ installing homebrew packages..."
 "$HOME/.local/bin/brew-setup"
 echo "✅ homebrew packages installed"
+
+echo "✅ Setup complete. Restart your terminal or run: exec zsh"

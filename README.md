@@ -18,11 +18,10 @@ Clone the repository in your home directory:
 git clone https://github.com/uncrft/dotfiles.git ~/.dotfiles
 ```
 
-Run the following commands
+Run the setup script:
 
 ```sh
-cd "$HOME/.dotfiles"
-/bin/zsh -c "$HOME/.dotfiles/setup.sh"
+~/.dotfiles/setup.sh
 ```
 
 ## Usage
