@@ -45,4 +45,13 @@ zoxide init nushell >"$HOME/.zoxide.nu"
 starship init nu >"$HOME/.cache/starship/init.nu"
 echo "✅ nushell plugins initialized"
 
+echo "🛠️ launching apps that require permissions..."
+xattr -d com.apple.quarantine /Applications/AeroSpace.app 2>/dev/null || true
+xattr -d com.apple.quarantine /Applications/Mos.app 2>/dev/null || true
+xattr -d com.apple.quarantine "/Applications/Hidden Bar.app" 2>/dev/null || true
+open /Applications/AeroSpace.app
+open /Applications/Mos.app
+open "/Applications/Hidden Bar.app"
+echo "✅ apps launched (grant permissions when prompted)"
+
 echo "✅ Setup complete. Restart your terminal or run: exec zsh"
