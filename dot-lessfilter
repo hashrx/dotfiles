@@ -1,0 +1,40 @@
+#!/usr/bin/env sh
+mime=$(file -bL --mime-type "$1")
+category=${mime%%/*}
+kind=${mime##*/}
+
+if [ -d "$1" ]; then
+  if command -v eza >/dev/null 2>&1; then
+    eza --all --git -hl --color=always --icons "$1"
+  else
+    ls -la "$1"
+  fi
+elif [ "$category" = image ]; then
+  if command -v chafa >/dev/null 2>&1; then
+    chafa "$1"
+    command -v exiftool >/dev/null 2>&1 && exiftool "$1"
+  else
+    file "$1"
+  fi
+elif [ "$kind" = vnd.openxmlformats-officedocument.spreadsheetml.sheet ] ||
+  [ "$kind" = vnd.ms-excel ]; then
+  if command -v in2csv >/dev/null 2>&1 && command -v xsv >/dev/null 2>&1 && command -v bat >/dev/null 2>&1; then
+    in2csv "$1" | xsv table | bat -ltsv --color=always
+  else
+    file "$1"
+  fi
+elif [ "$category" = text ]; then
+  if command -v bat >/dev/null 2>&1; then
+    bat --color=always "$1"
+  else
+    cat "$1"
+  fi
+else
+  if command -v lesspipe.sh >/dev/null 2>&1 && command -v bat >/dev/null 2>&1; then
+    lesspipe.sh "$1" | bat --color=always
+  elif command -v lesspipe.sh >/dev/null 2>&1; then
+    lesspipe.sh "$1"
+  else
+    cat "$1"
+  fi
+fi
