@@ -1,5 +1,6 @@
 #!/usr/bin/env zsh
+set -e
 # alias: brew dump
 #:  * `dump`
-#:    `brew dump` is an alias for `brew bundle dump --global`
+#:    `brew dump` is an alias for `brew bundle dump`
 brew bundle dump --global --force --all --describe $*

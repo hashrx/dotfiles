@@ -1,4 +1,5 @@
 #!/usr/bin/env zsh
+set -e
 # alias: brew add
 #:  * `add` [args...]
 #:    `brew add` is an alias for `brew install && brew dump`

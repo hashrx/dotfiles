@@ -6,14 +6,22 @@ tap "sst/tap"
 brew "awscli"
 # Programmable completion for Bash 3.2
 brew "bash-completion"
+# C library of Git core methods that is re-entrant and linkable
+brew "libgit2"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
 # Resource monitor. C++ version and continuation of bashtop and bpytop
 brew "btop"
 # Multi-shell multi-command argument completer
 brew "carapace"
+# Terminal graphics for the 21st century
+brew "chafa"
+# Suite of command-line tools for working with CSV
+brew "csvkit"
 # Modern, maintained replacement for ls
 brew "eza"
+# Perl lib for reading and writing EXIF metadata
+brew "exiftool"
 # Simple, fast and user-friendly alternative to find
 brew "fd"
 # Fast and simple Node.js version manager
@@ -22,6 +30,8 @@ brew "fnm"
 brew "fzf"
 # GitHub command-line tool
 brew "gh"
+# Distributed revision control system
+brew "git"
 # Automatic git commit --fixup
 brew "git-absorb"
 # High-velocity, monorepo-scale workflow for Git
@@ -48,6 +58,8 @@ brew "starship"
 brew "stow"
 # Generator for LS_COLORS with support for multiple color themes
 brew "vivid"
+# Fast CSV toolkit written in Rust
+brew "xsv"
 # Programming language designed for robustness, optimality, and clarity
 brew "zig"
 # Shell extension to navigate your filesystem faster

@@ -1,8 +1,4 @@
 #!/usr/bin/env zsh
-# alias: brew setup
-# Setup bundle
-#:  * `setup`
-#:    `brew setup` is an alias for `brew alias bundle sync`
-brew alias
-brew bundle --global
+set -e
+# Setup homebrew packages from Brewfile
 brew sync

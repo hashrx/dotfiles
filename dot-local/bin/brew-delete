@@ -1,4 +1,5 @@
 #!/usr/bin/env zsh
+set -e
 # alias: brew delete
 #:  * `delete` [args...]
 #:    `brew delete` is an alias for `brew uninstall && brew dump`
