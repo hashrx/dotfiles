@@ -7,6 +7,7 @@ $git_branch\
 $git_state\
 $git_status\
 $cmd_duration\
+$shell\
 $character"""
 
 [directory]
@@ -33,3 +34,10 @@ style = "white"
 [cmd_duration]
 format = "[$duration]($style) "
 style = "yellow"
+
+[shell]
+disabled = false
+format = "$indicator "
+fish_indicator = ""
+zsh_indicator = "[󰬡](bold purple)"
+nu_indicator = "[󰬕](bold #ff9e64)"
