@@ -1,3 +1,5 @@
+command = /opt/homebrew/bin/nu --config ~/.config/nushell/config.nu --env-config ~/.config/nushell/env.nu
+
 theme = tokyonight
 background = #000000
 background-opacity = 0.6
