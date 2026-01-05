@@ -1,6 +1,7 @@
 tap "felixkratz/formulae"
 tap "nikitabobko/tap"
 tap "oven-sh/bun"
+tap "sst/tap"
 # Official Amazon AWS command-line interface
 brew "awscli"
 # Programmable completion for Bash 3.2
@@ -9,6 +10,8 @@ brew "bash-completion"
 brew "bat"
 # Resource monitor. C++ version and continuation of bashtop and bpytop
 brew "btop"
+# Multi-shell multi-command argument completer
+brew "carapace"
 # Modern, maintained replacement for ls
 brew "eza"
 # Simple, fast and user-friendly alternative to find
@@ -37,8 +40,6 @@ brew "lesspipe"
 brew "neovim"
 # Modern shell for the GitHub era
 brew "nushell"
-# AI coding agent, built for the terminal
-brew "opencode"
 # Search tool like grep and The Silver Searcher
 brew "ripgrep"
 # Cross-shell prompt for astronauts
@@ -47,6 +48,8 @@ brew "starship"
 brew "stow"
 # Generator for LS_COLORS with support for multiple color themes
 brew "vivid"
+# Programming language designed for robustness, optimality, and clarity
+brew "zig"
 # Shell extension to navigate your filesystem faster
 brew "zoxide"
 # UNIX shell (command interpreter)
@@ -63,6 +66,8 @@ brew "zsh-vi-mode"
 brew "felixkratz/formulae/borders"
 # Incredibly fast JavaScript runtime, bundler, transpiler and package manager - all in one.
 brew "oven-sh/bun/bun"
+# The AI coding agent built for the terminal.
+brew "sst/tap/opencode"
 # Command-line interface for 1Password
 cask "1password-cli"
 # AeroSpace is an i3-like tiling window manager for macOS
