@@ -11,12 +11,12 @@ export HISTFILE="$XDG_STATE_HOME/zsh_history"
 export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
 export FZF_DEFAULT_OPTS='--style full --bind ctrl-d:half-page-down,ctrl-u:half-page-up'
 export EDITOR="nvim"
-export LESSOPEN='|~/.lessfilter %s'
+export LESSOPEN="|$HOME/.lessfilter %s"
 export CLICOLOR=1
 export TURBO_UI=true
 export AWS_PROFILE="ClaudeCode"
 
-eval "$(starship init zsh)"
+zsh-defer eval "$(starship init zsh)"
 
 zstyle ':completion:*:descriptions' format '[%d]'
 zstyle ':completion:*:git-checkout:*' sort false
@@ -30,7 +30,7 @@ autoload -Uz up-line-or-beginning-search
 autoload -Uz down-line-or-beginning-search
 autoload -Uz compinit
 
-fpath=(/opt/homebrew/share/zsh-completions $XDG_CONFIG_HOME/zsh/completions $fpath)
+fpath=($HOMEBREW_PREFIX/share/zsh-completions $XDG_CONFIG_HOME/zsh/completions $fpath)
 
 if [[ -n $GHOSTTY_RESOURCES_DIR ]]; then
   source "$GHOSTTY_RESOURCES_DIR"/shell-integration/zsh/ghostty-integration
@@ -40,9 +40,9 @@ fi
 # See https://github.com/zdharma-continuum/fast-syntax-highlighting/issues/27#issuecomment-1267278072
 function whatis() { if [[ -v THEFD ]]; then :; else command whatis "$@"; fi; }
 
-zsh-defer source /opt/homebrew/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
-zsh-defer source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-zsh-defer source /opt/homebrew/opt/zsh-fast-syntax-highlighting/share/zsh-fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
+[[ -f "$HOMEBREW_PREFIX/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh" ]] && zsh-defer source "$HOMEBREW_PREFIX/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh"
+[[ -f "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]] && zsh-defer source "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+[[ -f "$HOMEBREW_PREFIX/opt/zsh-fast-syntax-highlighting/share/zsh-fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh" ]] && zsh-defer source "$HOMEBREW_PREFIX/opt/zsh-fast-syntax-highlighting/share/zsh-fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh"
 
 zsh-defer eval "$(fnm env --use-on-cd --corepack-enabled --resolve-engines --version-file-strategy=recursive --shell zsh)"
 zsh-defer eval "$(zoxide init zsh)"
@@ -110,7 +110,7 @@ function repo() {
 }
 
 # pnpm
-export PNPM_HOME="/Users/maxime.doury/.local/share/pnpm"
+export PNPM_HOME="$XDG_DATA_HOME/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;

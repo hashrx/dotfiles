@@ -2,6 +2,13 @@
 # This env is loaded in all environments
 ##
 
+# Initialize Homebrew
+if [[ -f /opt/homebrew/bin/brew ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [[ -f /usr/local/bin/brew ]]; then
+  eval "$(/usr/local/bin/brew shellenv)"
+fi
+
 # Define the path to the dotfiles directory
 export DOTFILES="${DOTFILES:=$HOME/.dotfiles}"
 
