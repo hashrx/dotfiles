@@ -9,7 +9,7 @@ alias vim="nvim"
 
 export HISTFILE="$XDG_STATE_HOME/zsh_history"
 export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
-export FZF_DEFAULT_OPTS='--style full'
+export FZF_DEFAULT_OPTS='--style full --bind ctrl-d:half-page-down,ctrl-u:half-page-up'
 export EDITOR="nvim"
 export LESSOPEN='|~/.lessfilter %s'
 export CLICOLOR=1
