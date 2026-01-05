@@ -1,0 +1,46 @@
+# Nushell-specific starship config
+# This config extends the main starship.toml but removes the character module
+# since Nushell uses PROMPT_INDICATOR for the prompt character
+
+# Import settings from main config by duplicating them here
+# (starship doesn't support true inheritance/extends)
+add_newline = false
+
+# Remove $character from format - Nushell handles this via PROMPT_INDICATOR
+format = """
+$username\
+$hostname\
+$directory\
+$git_branch\
+$git_state\
+$git_status\
+$cmd_duration\
+$shell\
+$line_break"""
+
+[directory]
+style = "#4FD6BE"
+
+[git_branch]
+format = "[$branch]($style)"
+style = "white"
+
+[git_status]
+format = "[$conflicted$untracked$modified$staged$renamed$deleted$ahead_behind$stashed]($style) "
+style = "purple"
+stashed = "≡"
+
+[git_state]
+format = '\([$state( $progress_current/$progress_total)]($style)\) '
+style = "white"
+
+[cmd_duration]
+format = "[$duration]($style) "
+style = "yellow"
+
+[shell]
+disabled = false
+format = "$indicator "
+fish_indicator = ""
+zsh_indicator = "[󰬡](bold purple)"
+nu_indicator = "[󰬕](bold #ff9e64)"

@@ -1,0 +1,5 @@
+# Global fd ignore patterns
+# These patterns work like .gitignore syntax
+
+node_modules
+.git
