@@ -1,0 +1,78 @@
+#!/usr/bin/env zsh
+set -euo pipefail
+
+SSH_DIR="$HOME/.ssh"
+SSH_KEY="$SSH_DIR/id_ed25519"
+KNOWN_HOSTS="$SSH_DIR/known_hosts"
+
+# Ensure .ssh directory exists
+mkdir -p "$SSH_DIR"
+chmod 700 "$SSH_DIR"
+
+# Create SSH key if it doesn't exist
+if [[ ! -f "$SSH_KEY" ]]; then
+  echo "🔑 Generating new SSH key..."
+  ssh-keygen -t ed25519 -f "$SSH_KEY" -C "$(whoami)@$(hostname)"
+  echo "✅ SSH key generated"
+else
+  echo "✅ SSH key already exists"
+fi
+
+# Update GitHub host keys
+echo "🔑 Updating GitHub known hosts..."
+sed -i '' '/^github.com /d' "$KNOWN_HOSTS" 2>/dev/null || true
+GITHUB_KEYS=$(ssh-keyscan github.com 2>/dev/null | grep -v '^#')
+if [[ -z "$GITHUB_KEYS" ]]; then
+  echo "❌ Failed to fetch GitHub host keys"
+  exit 1
+fi
+echo "$GITHUB_KEYS" >> "$KNOWN_HOSTS"
+echo "✅ GitHub host keys updated"
+
+# Add to GitHub if gh is available
+if command -v gh &>/dev/null; then
+  if ! gh auth status &>/dev/null; then
+    echo "🔑 GitHub CLI not authenticated. Logging in..."
+    if ! gh auth login -h github.com -p ssh -w -c --skip-ssh-key -s admin:public_key,admin:ssh_signing_key; then
+      echo "❌ GitHub authentication failed"
+      exit 1
+    fi
+  fi
+  
+  # Check GitHub key status
+  KEY_TITLE="$(hostname)"
+  KEY_FINGERPRINT="$(awk '{print $2}' "$SSH_KEY.pub")"
+  GH_KEYS=$(gh ssh-key list 2>/dev/null || true)
+  EXISTING_KEY_ID=$(echo "$GH_KEYS" | awk -v title="$KEY_TITLE" -v fp="$KEY_FINGERPRINT" '$1 == title && $3 != fp {print $5}')
+  
+  if echo "$GH_KEYS" | grep -q "$KEY_FINGERPRINT"; then
+    echo "✅ SSH key already on GitHub"
+  elif [[ -n "$EXISTING_KEY_ID" ]]; then
+    read "update_key?SSH key '$KEY_TITLE' on GitHub is outdated. Update it? [y/N] "
+    if [[ "$update_key" =~ ^[Yy]$ ]]; then
+      echo "🗑️  Removing old SSH key..."
+      gh ssh-key delete "$EXISTING_KEY_ID" --yes
+      echo "🔑 Adding new SSH key..."
+      gh ssh-key add "$SSH_KEY.pub" --title "$KEY_TITLE"
+      echo "✅ SSH key updated on GitHub"
+    else
+      echo "⏭️  Skipping GitHub update"
+    fi
+  else
+    read "upload_key?Upload SSH key to GitHub? [y/N] "
+    if [[ "$upload_key" =~ ^[Yy]$ ]]; then
+      echo "🔑 Adding SSH key to GitHub..."
+      gh ssh-key add "$SSH_KEY.pub" --title "$KEY_TITLE"
+      echo "✅ SSH key added to GitHub"
+    else
+      echo "⏭️  Skipping GitHub upload"
+    fi
+  fi
+else
+  echo "⚠️  gh not installed, skipping GitHub setup"
+fi
+
+# Add to macOS Keychain (do this last as a finalization step)
+echo "🔑 Adding SSH key to keychain..."
+ssh-add --apple-use-keychain "$SSH_KEY"
+echo "✅ SSH key added to keychain"

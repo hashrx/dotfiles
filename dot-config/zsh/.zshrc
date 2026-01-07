@@ -6,15 +6,12 @@ alias ls="eza"
 alias v="nvim"
 alias vi="nvim"
 alias vim="nvim"
+alias dotfiles="make -C ~/.dotfiles"
 
+# HISTFILE, HISTSIZE, and SAVEHIST must be set here (not .zshenv) because macOS /etc/zshrc overwrites it
 export HISTFILE="$XDG_STATE_HOME/zsh_history"
-export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
-export FZF_DEFAULT_OPTS='--style full --bind ctrl-d:half-page-down,ctrl-u:half-page-up'
-export EDITOR="nvim"
-export LESSOPEN="|$HOME/.lessfilter %s"
-export CLICOLOR=1
-export TURBO_UI=true
-export AWS_PROFILE="ClaudeCode"
+export HISTSIZE=10000
+export SAVEHIST=10000
 
 eval "$(starship init zsh)"
 
@@ -50,7 +47,9 @@ zsh-defer eval "$(zoxide init zsh)"
 zsh-defer zle -N up-line-or-beginning-search
 zsh-defer zle -N down-line-or-beginning-search
 
-zsh-defer compinit -u -d $XDG_STATE_HOME/zsh_completion
+# Ensure cache directory exists for completion dump
+mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
+zsh-defer compinit -u -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump"
 zsh-defer source "$XDG_CONFIG_HOME/zsh/plugins/fzf-tab/fzf-tab.plugin.zsh"
 zsh-defer source "$XDG_CONFIG_HOME/zsh/plugins/fzf-git/fzf-git.sh"
 
@@ -108,11 +107,3 @@ function repo() {
 
   cd "$git_root"
 }
-
-# pnpm
-export PNPM_HOME="$XDG_DATA_HOME/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-# pnpm end

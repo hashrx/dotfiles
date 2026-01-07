@@ -14,7 +14,7 @@ export DOTFILES="${DOTFILES:=$HOME/.dotfiles}"
 
 # Define https://specifications.freedesktop.org/basedir-spec/latest/#variables
 export XDG_BIN_HOME="${XDG_BIN_HOME:=$HOME/.local/bin}"
-export XDG_CACHE_HOME="${XDG_CACHE_HOME:=$HOME/Library/Caches}"
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:=$HOME/.cache}"
 export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:=$HOME/.config}"
 export XDG_CONFIG_DIRS="${XDG_CONFIG_DIRS:=/etc/xdg}"
 export XDG_DATA_HOME="${XDG_DATA_HOME:=$HOME/.local/share}"
@@ -54,3 +54,22 @@ export PYTHON_HISTORY="$XDG_STATE_HOME/python_history"
 export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
 export WORKON_HOME="$XDG_DATA_HOME/virtualenvs"
 export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
+
+# General environment variables
+export EDITOR="nvim"
+export LESSOPEN="|$HOME/.lessfilter %s"
+export CLICOLOR=1
+export TURBO_UI=true
+export AWS_PROFILE="ClaudeCode"
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+export FZF_DEFAULT_OPTS="--style full --prompt '❯ ' --bind 'ctrl-d:half-page-down,ctrl-u:half-page-up' --cycle"
+
+# pnpm
+export PNPM_HOME="$XDG_DATA_HOME/pnpm"
+if [[ ":$PATH:" != *":$PNPM_HOME:"* ]]; then
+  export PATH="$PNPM_HOME:$PATH"
+fi
+
+# History settings (HISTFILE is set in .zshrc to override /etc/zshrc)
+export HISTSIZE=10000
+export SAVEHIST=10000

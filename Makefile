@@ -1,7 +1,8 @@
-.PHONY: all clean
+.PHONY: all uninstall
 
 all:
-	stow --dotfiles -v -R .
+	stow --dotfiles -v -R -t ~ .
 
-clean:
-	stow --dotfiles -v -D .
+# Remove symlinks from home directory
+uninstall:
+	stow --dotfiles -v -D -t ~ .

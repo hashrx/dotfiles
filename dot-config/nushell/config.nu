@@ -9,9 +9,9 @@
 source $"($nu.cache-dir)/carapace.nu"
 
 # Source zoxide (smart directory jumping)
-# Requires: zoxide init nushell > ~/.zoxide.nu
+# Requires: zoxide init nushell > $"($nu.cache-dir)/zoxide.nu"
 # Note: nushell's `source` requires literal paths, conditional sourcing is not supported
-source ~/.zoxide.nu
+source $"($nu.cache-dir)/zoxide.nu"
 
 # Disable welcome banner
 $env.config.show_banner = false
@@ -30,10 +30,10 @@ $env.config.cursor_shape = {
 # Starship Prompt
 ##
 # Starship prompt integration
-# Requires: starship init nu > ~/.cache/starship/init.nu
+# Requires: starship init nu > $"($nu.cache-dir)/starship.nu"
 # Note: nushell's `source` requires literal paths, conditional sourcing is not supported
 # We've disabled starship's character module to use Nushell's vi-mode aware indicators
-source ~/.cache/starship/init.nu
+source $"($nu.cache-dir)/starship.nu"
 
 # Custom vi-mode indicators that change based on mode and exit code
 # Insert mode: ❯ (green on success, red on error)
@@ -78,6 +78,14 @@ alias stck = git-unstck
 ##
 # Custom Commands
 ##
+# Run dotfiles Makefile targets from anywhere
+def dotfiles [
+    target?: string  # Makefile target (default: all)
+] {
+    let t = ($target | default "all")
+    make -C ~/.dotfiles $t
+}
+
 # Jump to git repository root
 def --env repo [] {
     let result = (git rev-parse --show-toplevel | complete)
@@ -91,9 +99,10 @@ def --env repo [] {
 # Hooks
 ##
 # fnm: Auto-switch Node version on directory change
+# --version-file-strategy=recursive: looks for .nvmrc/.node-version/package.json in parent dirs (monorepo support)
+# --silent-if-unchanged: suppresses output when version doesn't change or no version file exists
 $env.config.hooks.env_change.PWD = ($env.config.hooks.env_change.PWD? | default [] | append {
-    condition: {|before, after| true }
-    code: "fnm use --silent-if-unchanged"
+    code: "fnm use --version-file-strategy=recursive --silent-if-unchanged"
 })
 
 ##

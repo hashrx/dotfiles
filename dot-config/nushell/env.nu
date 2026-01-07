@@ -29,7 +29,7 @@ $env.DOTFILES = ($env.DOTFILES? | default ($env.HOME | path join ".dotfiles"))
 # https://specifications.freedesktop.org/basedir-spec/latest/#variables
 ##
 $env.XDG_BIN_HOME = ($env.XDG_BIN_HOME? | default ($env.HOME | path join ".local" "bin"))
-$env.XDG_CACHE_HOME = ($env.XDG_CACHE_HOME? | default ($env.HOME | path join "Library" "Caches"))
+$env.XDG_CACHE_HOME = ($env.XDG_CACHE_HOME? | default ($env.HOME | path join ".cache"))
 $env.XDG_CONFIG_HOME = ($env.XDG_CONFIG_HOME? | default ($env.HOME | path join ".config"))
 $env.XDG_CONFIG_DIRS = ($env.XDG_CONFIG_DIRS? | default "/etc/xdg")
 $env.XDG_DATA_HOME = ($env.XDG_DATA_HOME? | default ($env.HOME | path join ".local" "share"))
@@ -70,6 +70,7 @@ $env.PYTHONUSERBASE = ($env.XDG_DATA_HOME | path join "python")
 $env.PYTHON_HISTORY = ($env.XDG_STATE_HOME | path join "python_history")
 $env.RUSTUP_HOME = ($env.XDG_DATA_HOME | path join "rustup")
 $env.WORKON_HOME = ($env.XDG_DATA_HOME | path join "virtualenvs")
+$env.ZDOTDIR = ($env.XDG_CONFIG_HOME | path join "zsh")
 
 ##
 # General environment variables

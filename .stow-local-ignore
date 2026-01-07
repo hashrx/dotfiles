@@ -1,7 +1,13 @@
-.git/*
+.git
 .gitignore
 .gitmodules
 Makefile
 README.md
 setup.sh
 node_modules
+
+# Machine-specific files that should never be stowed
+dot-config/nushell/history\.txt
+dot-ssh/id_ed25519
+dot-ssh/id_ed25519\.pub
+dot-ssh/known_hosts
