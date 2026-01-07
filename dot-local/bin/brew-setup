@@ -1,4 +1,0 @@
-#!/usr/bin/env zsh
-set -e
-# Setup homebrew packages from Brewfile
-brew sync

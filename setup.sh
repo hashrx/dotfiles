@@ -153,15 +153,12 @@ EOF
 install_packages() {
     CURRENT_STEP="Homebrew packages installation"
     
-    # brew-setup is at DOTFILES_DIR before stow, then ~/.local/bin after
-    local brew_setup_path="$HOME/.local/bin/brew-setup"
-    
-    if [[ ! -x "$brew_setup_path" ]]; then
-        echo "❌ Error: brew-setup not found at $brew_setup_path. Symlink step may have failed."
+    if ! command -v brew &>/dev/null; then
+        echo "❌ Error: brew command not found. Homebrew installation may have failed."
         exit 1
     fi
     
-    "$brew_setup_path"
+    brew sync
     echo "✅ Homebrew packages installed"
 }
 
