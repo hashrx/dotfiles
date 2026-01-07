@@ -3,7 +3,6 @@ set -euo pipefail
 
 SSH_DIR="$HOME/.ssh"
 SSH_KEY="$SSH_DIR/id_ed25519"
-KNOWN_HOSTS="$SSH_DIR/known_hosts"
 
 # Ensure .ssh directory exists
 mkdir -p "$SSH_DIR"
@@ -17,17 +16,6 @@ if [[ ! -f "$SSH_KEY" ]]; then
 else
   echo "✅ SSH key already exists"
 fi
-
-# Update GitHub host keys
-echo "🔑 Updating GitHub known hosts..."
-sed -i '' '/^github.com /d' "$KNOWN_HOSTS" 2>/dev/null || true
-GITHUB_KEYS=$(ssh-keyscan github.com 2>/dev/null | grep -v '^#')
-if [[ -z "$GITHUB_KEYS" ]]; then
-  echo "❌ Failed to fetch GitHub host keys"
-  exit 1
-fi
-echo "$GITHUB_KEYS" >> "$KNOWN_HOSTS"
-echo "✅ GitHub host keys updated"
 
 # Add to GitHub if gh is available
 if command -v gh &>/dev/null; then
