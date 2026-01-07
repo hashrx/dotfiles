@@ -54,7 +54,7 @@ zsh-defer compinit -u -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump"
 zsh-defer source "$XDG_CONFIG_HOME/zsh/plugins/fzf-tab/fzf-tab.plugin.zsh"
 zsh-defer source "$XDG_CONFIG_HOME/zsh/plugins/fzf-git/fzf-git.sh"
 
-zsh-defer export LS_COLORS="$(vivid generate tokyonight-night)"
+[[ -f "$XDG_CACHE_HOME/vivid/ls_colors" ]] && zsh-defer export LS_COLORS="$(< $XDG_CACHE_HOME/vivid/ls_colors)"
 
 # Key bindings (insert mode only)
 function zvm_after_init() { 

@@ -119,8 +119,9 @@ if (which fnm | is-not-empty) {
 ##
 # LS_COLORS configuration with vivid
 ##
-if (which vivid | is-not-empty) {
-    $env.LS_COLORS = (vivid generate tokyonight-night)
+let ls_colors_cache = ($env.HOME | path join ".cache" "vivid" "ls_colors")
+if ($ls_colors_cache | path exists) {
+    $env.LS_COLORS = (open $ls_colors_cache)
 }
 
 ##
