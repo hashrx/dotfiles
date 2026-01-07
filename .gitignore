@@ -1,5 +1,6 @@
 dot-config/raycast
 dot-config/git/user
+dot-config/git/work
 dot-config/ghostty/local
 dot-config/gh/hosts.yml
 dot-config/nushell/history.*

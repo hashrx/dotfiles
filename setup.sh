@@ -104,25 +104,50 @@ create_symlinks() {
 }
 
 configure_git() {
-    CURRENT_STEP="git configuration"
-    if [[ ! -f "$HOME/.config/git/user" ]]; then
-        read "git_name?Enter your Git name: "
-        read "git_email?Enter your Git email: "
-        if [[ -z "$git_name" || -z "$git_email" ]]; then
-            echo "❌ Error: Git name and email are required."
-            exit 1
-        fi
-        cat > "$HOME/.config/git/user" << EOF
+    CURRENT_STEP="Configuring Git"
+    
+    # Skip if both config files already exist
+    if [[ -f "$HOME/.config/git/user" ]] && [[ -f "$HOME/.config/git/work" ]]; then
+        echo "⏭️  Git user config already exists"
+        return
+    fi
+    
+    echo "Setting up Git user configuration..."
+    
+    # Prompt for values
+    read "git_name?Enter your Git name: "
+    read "git_email?Enter your personal Git email: "
+    read "git_work_email?Enter your work Git email: "
+    
+    # Validate required fields
+    if [[ -z "$git_name" || -z "$git_email" || -z "$git_work_email" ]]; then
+        echo "❌ Error: All fields are required"
+        exit 1
+    fi
+    
+    # Sanitize inputs (allow only safe characters)
+    git_name="${git_name//[^a-zA-Z0-9 ._-]/}"
+    git_email="${git_email//[^a-zA-Z0-9@._+-]/}"
+    git_work_email="${git_work_email//[^a-zA-Z0-9@._+-]/}"
+    
+    # Create personal config (default)
+    cat > "$HOME/.config/git/user" << EOF
 [user]
     name = $git_name
     email = $git_email
     signingkey = ~/.ssh/id_ed25519.pub
 EOF
-        echo "✅ Git user configured"
-    else
-        echo "⏭️  Git user config already exists"
-        add_note "Git user config already exists at ~/.config/git/user"
-    fi
+    
+    # Create work config
+    cat > "$HOME/.config/git/work" << EOF
+[user]
+    name = $git_name
+    email = $git_work_email
+    signingkey = ~/.ssh/id_ed25519.pub
+EOF
+    
+    echo "✅ Git user config created"
+    add_note "Git configured: personal ($git_email) and work ($git_work_email)"
 }
 
 install_packages() {

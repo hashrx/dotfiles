@@ -1,6 +1,8 @@
 [include]
-  # Define [user] name, email, signingkey
-  path = user
+    path = ~/.config/git/user
+
+[includeIf "gitdir:~/Developer/work/"]
+    path = ~/.config/git/work
 [core]
   ignorecase = true
   pager = delta
