@@ -4,5 +4,6 @@ dot-config/git/work
 dot-config/ghostty/local
 dot-config/gh/hosts.yml
 dot-config/nushell/history.*
+dot-config/zsh/.zcompcache
 dot-ssh/id_*
 dot-ssh/known_hosts

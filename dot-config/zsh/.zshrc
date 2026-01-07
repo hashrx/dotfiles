@@ -15,6 +15,7 @@ export SAVEHIST=10000
 
 eval "$(starship init zsh)"
 
+zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/zcompcache"
 zstyle ':completion:*:descriptions' format '[%d]'
 zstyle ':completion:*:git-checkout:*' sort false
 zstyle ':fzf-tab:*' fzf-bindings 'ctrl-y:accept'
