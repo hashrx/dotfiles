@@ -1,4 +1,10 @@
-source "$XDG_CONFIG_HOME/zsh/plugins/zsh-defer/zsh-defer.plugin.zsh"
+# Load zsh-defer for deferred execution, or fallback to immediate execution
+if [[ -f "$XDG_CONFIG_HOME/zsh/plugins/zsh-defer/zsh-defer.plugin.zsh" ]]; then
+    source "$XDG_CONFIG_HOME/zsh/plugins/zsh-defer/zsh-defer.plugin.zsh"
+else
+    # Fallback: run commands immediately if zsh-defer is not available
+    zsh-defer() { "$@" }
+fi
 
 alias p="pnpm"
 alias g="git"
