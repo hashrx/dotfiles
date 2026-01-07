@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
-set -e
+set -euo pipefail
 # alias: brew sync
 #:  * `sync`
 #:    `brew sync` is an alias for `brew bundle install --cleanup`
-brew bundle install --global --cleanup $*
+brew bundle install --global --cleanup "$@"

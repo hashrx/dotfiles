@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
-set -e
+set -euo pipefail
 # alias: brew delete
 #:  * `delete` [args...]
 #:    `brew delete` is an alias for `brew uninstall && brew dump`
-brew uninstall $*
+brew uninstall "$@"
 brew dump

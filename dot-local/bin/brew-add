@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
-set -e
+set -euo pipefail
 # alias: brew add
 #:  * `add` [args...]
 #:    `brew add` is an alias for `brew install && brew dump`
-brew install $*
+brew install "$@"
 brew dump
