@@ -1,0 +1,30 @@
+#!/usr/bin/env zsh
+set -euo pipefail
+
+# Regenerate nushell init files
+# Run this after updating zoxide, starship, or carapace
+
+CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/nushell"
+mkdir -p "$CACHE_DIR"
+
+if command -v zoxide &>/dev/null; then
+    zoxide init nushell > "$CACHE_DIR/zoxide.nu"
+    echo "✅ Generated zoxide.nu"
+else
+    echo "⏭️  zoxide not installed"
+fi
+
+if command -v starship &>/dev/null; then
+    starship init nu > "$CACHE_DIR/starship.nu"
+    echo "✅ Generated starship.nu"
+else
+    echo "⏭️  starship not installed"
+fi
+
+if command -v carapace &>/dev/null; then
+    carapace _carapace nushell > "$CACHE_DIR/carapace.nu"
+    echo "✅ Generated carapace.nu"
+else
+    echo "⏭️  carapace not installed"
+fi
+

@@ -128,7 +128,3 @@ if ($ls_colors_cache | path exists) {
 # Carapace completion setup
 ##
 $env.CARAPACE_BRIDGES = 'zsh,fish,bash,inshellisense'
-if (which carapace | is-not-empty) {
-    mkdir ($nu.cache-dir)
-    carapace _carapace nushell | save --force $"($nu.cache-dir)/carapace.nu"
-}

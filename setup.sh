@@ -194,37 +194,13 @@ EOF
 }
 
 init_nushell_plugins() {
-    CURRENT_STEP="Nushell plugin initialization"
+    CURRENT_STEP="Initializing nushell plugins"
     
-    local plugins_initialized=()
-    local plugins_missing=()
-    
-    # Create cache directory for nushell generated files
-    mkdir -p "$HOME/.cache/nushell"
-    
-    # Initialize zoxide for nushell
-    if command -v zoxide &>/dev/null; then
-        zoxide init nushell > "$HOME/.cache/nushell/zoxide.nu"
-        plugins_initialized+=("zoxide")
+    if [[ -x "$HOME/.local/bin/nu-init" ]]; then
+        "$HOME/.local/bin/nu-init"
     else
-        plugins_missing+=("zoxide")
-    fi
-    
-    # Initialize starship for nushell
-    if command -v starship &>/dev/null; then
-        starship init nu > "$HOME/.cache/nushell/starship.nu"
-        plugins_initialized+=("starship")
-    else
-        plugins_missing+=("starship")
-    fi
-    
-    if (( ${#plugins_initialized[@]} > 0 )); then
-        echo "✅ Nushell plugins initialized (${plugins_initialized[*]})"
-    fi
-    
-    if (( ${#plugins_missing[@]} > 0 )); then
-        echo "⚠️  Some Nushell plugins not found: ${plugins_missing[*]}"
-        add_note "Nushell plugins not found: ${plugins_missing[*]} - install them and re-run setup"
+        echo "⚠️  nu-init script not found, skipping nushell plugin initialization"
+        add_note "Run 'nu-init' manually after stow to generate nushell init files"
     fi
 }
 
