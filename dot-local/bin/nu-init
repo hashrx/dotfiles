@@ -1,30 +1,78 @@
-#!/usr/bin/env zsh
+#!/bin/bash
+# Regenerate nushell cache files for faster shell startup
+# Usage: nu-init [--carapace] [--zoxide] [--starship] [--all] [--help]
+# If no arguments provided, defaults to --all
+
 set -euo pipefail
 
-# Regenerate nushell init files
-# Run this after updating zoxide, starship, or carapace
+XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
 
-CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/nushell"
-mkdir -p "$CACHE_DIR"
+show_help() {
+    cat << 'EOF'
+Usage: nu-init [OPTIONS]
 
-if command -v zoxide &>/dev/null; then
-    zoxide init nushell > "$CACHE_DIR/zoxide.nu"
-    echo "✅ Generated zoxide.nu"
-else
-    echo "⏭️  zoxide not installed"
+Regenerate nushell cache files for faster shell startup.
+
+Options:
+    --carapace    Regenerate carapace completions
+    --zoxide      Regenerate zoxide integration
+    --starship    Regenerate starship prompt
+    --all         Regenerate all cache files (default if no args)
+    --help        Show this help message
+
+Examples:
+    nu-init                     # Regenerate all cache files
+    nu-init --starship          # Regenerate only starship
+    nu-init --carapace --zoxide # Regenerate carapace and zoxide
+EOF
+}
+
+generate_cache() {
+    local name="$1"
+    local cache_path="$2"
+    local command="$3"
+
+    mkdir -p "$(dirname "$cache_path")"
+    if eval "$command" > "$cache_path" 2>/dev/null; then
+        echo "✓ $name"
+    else
+        echo "✗ $name (not installed or failed)"
+        rm -f "$cache_path"
+    fi
+}
+
+# Parse arguments
+do_all=false
+do_carapace=false
+do_zoxide=false
+do_starship=false
+
+# If no args, default to all
+if [[ $# -eq 0 ]]; then
+    do_all=true
 fi
 
-if command -v starship &>/dev/null; then
-    starship init nu > "$CACHE_DIR/starship.nu"
-    echo "✅ Generated starship.nu"
-else
-    echo "⏭️  starship not installed"
+# Parse flags
+for arg in "$@"; do
+    case "$arg" in
+        --all) do_all=true ;;
+        --carapace) do_carapace=true ;;
+        --zoxide) do_zoxide=true ;;
+        --starship) do_starship=true ;;
+        --help) show_help; exit 0 ;;
+        *) echo "Unknown option: $arg"; show_help; exit 1 ;;
+    esac
+done
+
+# Run selected plugins
+if [[ "$do_all" == true || "$do_carapace" == true ]]; then
+    generate_cache "carapace" "$XDG_CACHE_HOME/nushell/carapace.nu" "carapace _carapace nushell"
 fi
 
-if command -v carapace &>/dev/null; then
-    carapace _carapace nushell > "$CACHE_DIR/carapace.nu"
-    echo "✅ Generated carapace.nu"
-else
-    echo "⏭️  carapace not installed"
+if [[ "$do_all" == true || "$do_zoxide" == true ]]; then
+    generate_cache "zoxide" "$XDG_CACHE_HOME/nushell/zoxide.nu" "zoxide init nushell"
 fi
 
+if [[ "$do_all" == true || "$do_starship" == true ]]; then
+    generate_cache "starship" "$XDG_CACHE_HOME/nushell/starship.nu" "starship init nu"
+fi

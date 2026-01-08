@@ -1,57 +1,109 @@
-#!/usr/bin/env zsh
+#!/bin/bash
+# Regenerate zsh cache files for faster shell startup
+# Usage: zsh-init [--brew] [--vivid] [--fnm] [--zoxide] [--starship] [--all] [--help]
+# If no arguments provided, defaults to --all
+
 set -euo pipefail
 
-# Regenerate zsh init/cache files
-# Run this after updating homebrew, zoxide, starship, or vivid
+XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
+
+# Show help message
+show_help() {
+    cat <<EOF
+Usage: zsh-init [OPTIONS]
+
+Regenerate zsh cache files for faster shell startup.
+
+Options:
+  --brew      Regenerate homebrew shellenv cache
+  --vivid     Regenerate vivid LS_COLORS cache
+  --fnm       Regenerate fnm environment cache
+  --zoxide    Regenerate zoxide init cache
+  --starship  Regenerate starship init cache
+  --all       Regenerate all caches (default if no options)
+  --help      Show this help message
+
+Examples:
+  zsh-init              # Regenerate all caches
+  zsh-init --brew       # Only regenerate homebrew cache
+  zsh-init --fnm --zoxide  # Regenerate fnm and zoxide caches
+EOF
+}
+
+# Helper function to generate cache
+generate_cache() {
+    local name="$1"
+    local cache_path="$2"
+    local command="$3"
+
+    mkdir -p "$(dirname "$cache_path")"
+    if eval "$command" > "$cache_path" 2>/dev/null; then
+        echo "✓ $name"
+    else
+        echo "✗ $name (not installed or failed)"
+        rm -f "$cache_path"
+    fi
+}
+
+# Parse arguments
+do_all=false
+do_brew=false
+do_vivid=false
+do_fnm=false
+do_zoxide=false
+do_starship=false
+
+# If no args, default to all
+if [[ $# -eq 0 ]]; then
+    do_all=true
+fi
+
+# Parse flags
+for arg in "$@"; do
+    case "$arg" in
+        --all) do_all=true ;;
+        --brew) do_brew=true ;;
+        --vivid) do_vivid=true ;;
+        --fnm) do_fnm=true ;;
+        --zoxide) do_zoxide=true ;;
+        --starship) do_starship=true ;;
+        --help) show_help; exit 0 ;;
+        *) echo "Unknown option: $arg"; show_help; exit 1 ;;
+    esac
+done
 
 echo "Regenerating zsh cache files..."
 
 # Homebrew shellenv
-BREW_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/homebrew"
-mkdir -p "$BREW_CACHE_DIR"
-
-if [[ -f /opt/homebrew/bin/brew ]]; then
-    /opt/homebrew/bin/brew shellenv > "$BREW_CACHE_DIR/shellenv.zsh"
-    echo "✅ Generated homebrew/shellenv.zsh"
-elif [[ -f /usr/local/bin/brew ]]; then
-    /usr/local/bin/brew shellenv > "$BREW_CACHE_DIR/shellenv.zsh"
-    echo "✅ Generated homebrew/shellenv.zsh"
-else
-    echo "⏭️  Homebrew not installed"
+if [[ "$do_all" == true || "$do_brew" == true ]]; then
+    brew_cache="$XDG_CACHE_HOME/homebrew/shellenv.zsh"
+    if [[ -f /opt/homebrew/bin/brew ]]; then
+        generate_cache "homebrew" "$brew_cache" "/opt/homebrew/bin/brew shellenv"
+    elif [[ -f /usr/local/bin/brew ]]; then
+        generate_cache "homebrew" "$brew_cache" "/usr/local/bin/brew shellenv"
+    else
+        echo "✗ homebrew (not installed)"
+    fi
 fi
 
 # Vivid LS_COLORS
-VIVID_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/vivid"
-mkdir -p "$VIVID_CACHE_DIR"
-
-if command -v vivid &>/dev/null; then
-    vivid generate tokyonight-night > "$VIVID_CACHE_DIR/ls_colors"
-    echo "✅ Generated vivid/ls_colors"
-else
-    echo "⏭️  vivid not installed"
+if [[ "$do_all" == true || "$do_vivid" == true ]]; then
+    generate_cache "vivid" "$XDG_CACHE_HOME/vivid/ls_colors" "vivid generate tokyonight-night"
 fi
 
-# Zsh plugin init files
-ZSH_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
-mkdir -p "$ZSH_CACHE_DIR"
-
-if command -v fnm &>/dev/null; then
-    fnm env --use-on-cd --corepack-enabled --resolve-engines --version-file-strategy=recursive --shell zsh > "$ZSH_CACHE_DIR/fnm.zsh"
-    echo "✅ Generated zsh/fnm.zsh"
-else
-    echo "⏭️  fnm not installed"
+# fnm environment
+if [[ "$do_all" == true || "$do_fnm" == true ]]; then
+    generate_cache "fnm" "$XDG_CACHE_HOME/zsh/fnm.zsh" "fnm env --use-on-cd --corepack-enabled --resolve-engines --version-file-strategy=recursive --shell zsh"
 fi
 
-if command -v zoxide &>/dev/null; then
-    zoxide init zsh > "$ZSH_CACHE_DIR/zoxide.zsh"
-    echo "✅ Generated zsh/zoxide.zsh"
-else
-    echo "⏭️  zoxide not installed"
+# zoxide init
+if [[ "$do_all" == true || "$do_zoxide" == true ]]; then
+    generate_cache "zoxide" "$XDG_CACHE_HOME/zsh/zoxide.zsh" "zoxide init zsh"
 fi
 
-if command -v starship &>/dev/null; then
-    starship init zsh > "$ZSH_CACHE_DIR/starship.zsh"
-    echo "✅ Generated zsh/starship.zsh"
-else
-    echo "⏭️  starship not installed"
+# starship init
+if [[ "$do_all" == true || "$do_starship" == true ]]; then
+    generate_cache "starship" "$XDG_CACHE_HOME/zsh/starship.zsh" "starship init zsh"
 fi
+
+echo "Done."
