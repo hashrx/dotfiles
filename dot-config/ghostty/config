@@ -12,8 +12,6 @@ font-family = GeistMono NFM
 macos-window-shadow = false
 macos-option-as-alt = true
 
-# keybind=clear
-
 keybind = super+a=select_all
 keybind = super+k=clear_screen
 keybind = super+n=new_window
