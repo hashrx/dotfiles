@@ -169,7 +169,7 @@ install_packages() {
         exit 1
     fi
     
-    brew sync
+$HOME/.local/bin/brew-sync
     echo "✅ Homebrew packages installed"
 }
 
