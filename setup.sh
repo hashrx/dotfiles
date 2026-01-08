@@ -92,6 +92,28 @@ EOF
     fi
 }
 
+configure_touch_id_sudo() {
+    CURRENT_STEP="Touch ID for sudo"
+    local sudo_local="/etc/pam.d/sudo_local"
+    
+    if [[ -f "$sudo_local" ]] && grep -q "^auth.*pam_tid.so" "$sudo_local"; then
+        echo "⏭️  Touch ID for sudo already configured"
+        add_note "Touch ID for sudo was already configured"
+        return
+    fi
+    
+    if [[ ! -f /etc/pam.d/sudo_local.template ]]; then
+        echo "⚠️  Touch ID setup skipped (sudo_local.template not found)"
+        add_note "Touch ID setup skipped - sudo_local.template not found (older macOS?)"
+        return
+    fi
+    
+    echo "⚠️  Enabling Touch ID for sudo (requires sudo)"
+    sudo cp /etc/pam.d/sudo_local.template "$sudo_local"
+    sudo sed -i '' 's/^#auth/auth/' "$sudo_local"
+    echo "✅ Touch ID for sudo enabled"
+}
+
 create_directories() {
     CURRENT_STEP="directory creation"
     mkdir -p "$HOME/.config" "$HOME/.local/state" "$HOME/.local/share" "$HOME/.local/bin"
@@ -306,6 +328,7 @@ main() {
     init_submodules
     install_stow
     configure_zshenv
+    configure_touch_id_sudo
     create_directories
     create_symlinks
     configure_git
