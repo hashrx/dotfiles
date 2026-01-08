@@ -90,7 +90,7 @@ cask "arc"
 cask "colemak-dh"
 cask "font-geist-mono-nerd-font"
 # Terminal emulator that uses platform-native UI and GPU acceleration
-cask "ghostty"
+cask "ghostty@tip"
 # Utility to hide menu bar items
 cask "hiddenbar"
 # Smooths scrolling and set mouse scroll directions independently

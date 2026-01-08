@@ -75,3 +75,42 @@ keybind = ctrl+shift+f=toggle_split_zoom
 keybind = ctrl+shift+equal=equalize_splits
 
 keybind = shift+enter=text:\x1b\r
+
+# Vim mode keybindings
+keybind = ctrl+shift+escape=activate_key_table:vim
+keybind = vim/e=scroll_page_lines:1
+keybind = vim/i=scroll_page_lines:-1
+keybind = vim/arrow_down=scroll_page_lines:1
+keybind = vim/arrow_up=scroll_page_lines:-1
+
+# Page movement
+keybind = vim/ctrl+d=scroll_page_down
+keybind = vim/ctrl+u=scroll_page_up
+keybind = vim/ctrl+f=scroll_page_down
+keybind = vim/ctrl+b=scroll_page_up
+keybind = vim/shift+e=scroll_page_down
+keybind = vim/shift+i=scroll_page_up
+keybind = vim/shift+arrow_down=scroll_page_down
+keybind = vim/shift+arrow_up=scroll_page_up
+
+# Jump to top/bottom
+keybind = vim/g>g=scroll_to_top
+keybind = vim/shift+g=scroll_to_bottom
+
+# Search
+keybind = vim/slash=start_search
+keybind = vim/n=navigate_search:next
+
+# Copy
+keybind = vim/v=copy_to_clipboard
+keybind = vim/y=copy_to_clipboard
+
+# Command palette
+keybind = vim/shift+semicolon=toggle_command_palette
+
+# Exit vim mode
+keybind = vim/escape=deactivate_key_table
+keybind = vim/q=deactivate_key_table
+
+# Catch unbound keys
+keybind = vim/catch_all=ignore
