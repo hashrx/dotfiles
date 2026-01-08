@@ -72,8 +72,6 @@ alias g = git
 alias v = nvim
 alias vi = nvim
 alias vim = nvim
-alias unstck = git-unstck
-alias stck = git-unstck
 
 ##
 # Custom Commands
