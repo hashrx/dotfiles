@@ -95,6 +95,16 @@ EOF
 create_directories() {
     CURRENT_STEP="directory creation"
     mkdir -p "$HOME/.config" "$HOME/.local/state" "$HOME/.local/share" "$HOME/.local/bin"
+    
+    # Ensure ~/.ssh exists as a real directory (not a symlink from previous stow)
+    # This allows stow to symlink individual files instead of the whole directory
+    if [[ -L "$HOME/.ssh" ]]; then
+        echo "Converting ~/.ssh from symlink to directory..."
+        rm "$HOME/.ssh"
+    fi
+    mkdir -p "$HOME/.ssh"
+    chmod 700 "$HOME/.ssh"
+    
     echo "✅ Base directories created"
 }
 
