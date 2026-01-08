@@ -83,7 +83,7 @@ brew "sst/tap/opencode"
 # Command-line interface for 1Password
 cask "1password-cli"
 # AeroSpace is an i3-like tiling window manager for macOS
-cask "aerospace"
+cask "nikitabobko/tap/aerospace"
 # Chromium based browser
 cask "arc"
 # Colemak mod for more comfortable typing (DH variant)
