@@ -195,6 +195,29 @@ $HOME/.local/bin/brew-sync
     echo "✅ Homebrew packages installed"
 }
 
+configure_fnm() {
+    CURRENT_STEP="fnm Node.js setup"
+    
+    if ! command -v fnm &>/dev/null; then
+        echo "⚠️  fnm not found, skipping Node.js setup"
+        add_note "fnm not installed - skipping Node.js setup"
+        return
+    fi
+    
+    eval "$(fnm env)"
+    
+    if fnm list | grep -q "default"; then
+        echo "⏭️  fnm default Node.js version already set"
+        add_note "fnm default Node.js version was already configured"
+        return
+    fi
+    
+    echo "Installing Node.js LTS via fnm..."
+    fnm install --lts
+    fnm default lts-latest
+    echo "✅ Node.js LTS installed and set as default"
+}
+
 configure_ghostty() {
     CURRENT_STEP="Ghostty configuration"
     
@@ -333,6 +356,7 @@ main() {
     create_symlinks
     configure_git
     install_packages
+    configure_fnm
     configure_ghostty
     init_zsh_plugins
     init_nushell_plugins
