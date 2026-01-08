@@ -19,7 +19,11 @@ export HISTFILE="$XDG_STATE_HOME/zsh_history"
 export HISTSIZE=10000
 export SAVEHIST=10000
 
-eval "$(starship init zsh)"
+if [[ -f "$XDG_CACHE_HOME/zsh/starship.zsh" ]]; then
+    source "$XDG_CACHE_HOME/zsh/starship.zsh"
+else
+    eval "$(starship init zsh)"
+fi
 
 zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/zcompcache"
 zstyle ':completion:*:descriptions' format '[%d]'
@@ -48,8 +52,16 @@ function whatis() { if [[ -v THEFD ]]; then :; else command whatis "$@"; fi; }
 [[ -f "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]] && zsh-defer source "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
 [[ -f "$HOMEBREW_PREFIX/opt/zsh-fast-syntax-highlighting/share/zsh-fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh" ]] && zsh-defer source "$HOMEBREW_PREFIX/opt/zsh-fast-syntax-highlighting/share/zsh-fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh"
 
-zsh-defer eval "$(fnm env --use-on-cd --corepack-enabled --resolve-engines --version-file-strategy=recursive --shell zsh)"
-zsh-defer eval "$(zoxide init zsh)"
+if [[ -f "$XDG_CACHE_HOME/zsh/fnm.zsh" ]]; then
+    zsh-defer source "$XDG_CACHE_HOME/zsh/fnm.zsh"
+else
+    zsh-defer eval "$(fnm env --use-on-cd --corepack-enabled --resolve-engines --version-file-strategy=recursive --shell zsh)"
+fi
+if [[ -f "$XDG_CACHE_HOME/zsh/zoxide.zsh" ]]; then
+    zsh-defer source "$XDG_CACHE_HOME/zsh/zoxide.zsh"
+else
+    zsh-defer eval "$(zoxide init zsh)"
+fi
 
 zsh-defer zle -N up-line-or-beginning-search
 zsh-defer zle -N down-line-or-beginning-search
@@ -60,7 +72,11 @@ zsh-defer compinit -u -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump"
 zsh-defer source "$XDG_CONFIG_HOME/zsh/plugins/fzf-tab/fzf-tab.plugin.zsh"
 zsh-defer source "$XDG_CONFIG_HOME/zsh/plugins/fzf-git/fzf-git.sh"
 
-[[ -f "$XDG_CACHE_HOME/vivid/ls_colors" ]] && zsh-defer export LS_COLORS="$(< $XDG_CACHE_HOME/vivid/ls_colors)"
+if [[ -f "$XDG_CACHE_HOME/vivid/ls_colors" ]]; then
+    zsh-defer export LS_COLORS="$(< $XDG_CACHE_HOME/vivid/ls_colors)"
+else
+    zsh-defer eval 'export LS_COLORS="$(vivid generate tokyonight-night)"'
+fi
 
 # Key bindings (insert mode only)
 function zvm_after_init() { 

@@ -1,0 +1,57 @@
+#!/usr/bin/env zsh
+set -euo pipefail
+
+# Regenerate zsh init/cache files
+# Run this after updating homebrew, zoxide, starship, or vivid
+
+echo "Regenerating zsh cache files..."
+
+# Homebrew shellenv
+BREW_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/homebrew"
+mkdir -p "$BREW_CACHE_DIR"
+
+if [[ -f /opt/homebrew/bin/brew ]]; then
+    /opt/homebrew/bin/brew shellenv > "$BREW_CACHE_DIR/shellenv.zsh"
+    echo "✅ Generated homebrew/shellenv.zsh"
+elif [[ -f /usr/local/bin/brew ]]; then
+    /usr/local/bin/brew shellenv > "$BREW_CACHE_DIR/shellenv.zsh"
+    echo "✅ Generated homebrew/shellenv.zsh"
+else
+    echo "⏭️  Homebrew not installed"
+fi
+
+# Vivid LS_COLORS
+VIVID_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/vivid"
+mkdir -p "$VIVID_CACHE_DIR"
+
+if command -v vivid &>/dev/null; then
+    vivid generate tokyonight-night > "$VIVID_CACHE_DIR/ls_colors"
+    echo "✅ Generated vivid/ls_colors"
+else
+    echo "⏭️  vivid not installed"
+fi
+
+# Zsh plugin init files
+ZSH_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
+mkdir -p "$ZSH_CACHE_DIR"
+
+if command -v fnm &>/dev/null; then
+    fnm env --use-on-cd --corepack-enabled --resolve-engines --version-file-strategy=recursive --shell zsh > "$ZSH_CACHE_DIR/fnm.zsh"
+    echo "✅ Generated zsh/fnm.zsh"
+else
+    echo "⏭️  fnm not installed"
+fi
+
+if command -v zoxide &>/dev/null; then
+    zoxide init zsh > "$ZSH_CACHE_DIR/zoxide.zsh"
+    echo "✅ Generated zsh/zoxide.zsh"
+else
+    echo "⏭️  zoxide not installed"
+fi
+
+if command -v starship &>/dev/null; then
+    starship init zsh > "$ZSH_CACHE_DIR/starship.zsh"
+    echo "✅ Generated zsh/starship.zsh"
+else
+    echo "⏭️  starship not installed"
+fi

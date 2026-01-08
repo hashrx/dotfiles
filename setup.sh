@@ -222,6 +222,17 @@ setup_ssh_keys() {
     fi
 }
 
+init_zsh_plugins() {
+    CURRENT_STEP="Initializing zsh plugins"
+    
+    if [[ -x "$HOME/.local/bin/zsh-init" ]]; then
+        "$HOME/.local/bin/zsh-init"
+    else
+        echo "⚠️  zsh-init script not found, skipping zsh cache generation"
+        add_note "Run 'zsh-init' manually after stow to generate zsh cache files"
+    fi
+}
+
 launch_apps() {
     CURRENT_STEP="app launching"
     
@@ -278,6 +289,7 @@ main() {
     configure_git
     install_packages
     configure_ghostty
+    init_zsh_plugins
     init_nushell_plugins
     setup_ssh_keys
     launch_apps

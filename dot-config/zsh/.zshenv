@@ -2,11 +2,13 @@
 # This env is loaded in all environments
 ##
 
-# Initialize Homebrew
-if [[ -f /opt/homebrew/bin/brew ]]; then
-  eval "$(/opt/homebrew/bin/brew shellenv)"
+# Initialize Homebrew (use cache if available for ~50ms speedup)
+if [[ -f "$HOME/.cache/homebrew/shellenv.zsh" ]]; then
+    source "$HOME/.cache/homebrew/shellenv.zsh"
+elif [[ -f /opt/homebrew/bin/brew ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
 elif [[ -f /usr/local/bin/brew ]]; then
-  eval "$(/usr/local/bin/brew shellenv)"
+    eval "$(/usr/local/bin/brew shellenv)"
 fi
 
 # Define the path to the dotfiles directory
@@ -69,7 +71,3 @@ export PNPM_HOME="$XDG_DATA_HOME/pnpm"
 if [[ ":$PATH:" != *":$PNPM_HOME:"* ]]; then
   export PATH="$PNPM_HOME:$PATH"
 fi
-
-# History settings (HISTFILE is set in .zshrc to override /etc/zshrc)
-export HISTSIZE=10000
-export SAVEHIST=10000
