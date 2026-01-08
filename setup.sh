@@ -81,6 +81,7 @@ install_stow() {
 configure_zshenv() {
     CURRENT_STEP="/etc/zshenv configuration"
     if ! grep -q '.config/zsh/.zshenv' /etc/zshenv 2>/dev/null; then
+        echo "⚠️  This script will modify /etc/zshenv (requires sudo)"
         sudo tee -a /etc/zshenv >/dev/null <<EOF
 [[ -f \$HOME/.config/zsh/.zshenv ]] && source \$HOME/.config/zsh/.zshenv
 EOF
@@ -195,12 +196,19 @@ EOF
 
 init_nushell_plugins() {
     CURRENT_STEP="Initializing nushell plugins"
+    local nu_init_path="$HOME/.local/bin/nu-init"
     
-    if [[ -x "$HOME/.local/bin/nu-init" ]]; then
-        "$HOME/.local/bin/nu-init"
+    if [[ ! -x "$nu_init_path" ]]; then
+        echo "⚠️  Nushell init skipped (nu-init not found)"
+        add_note "Nushell init skipped - nu-init script not found"
+        return
+    fi
+    
+    if ! "$nu_init_path"; then
+        echo "⚠️  Nushell init encountered issues (non-fatal)"
+        add_note "Nushell init had issues - run nu-init manually if needed"
     else
-        echo "⚠️  nu-init script not found, skipping nushell plugin initialization"
-        add_note "Run 'nu-init' manually after stow to generate nushell init files"
+        echo "✅ Nushell plugins initialized"
     fi
 }
 
@@ -224,12 +232,19 @@ setup_ssh_keys() {
 
 init_zsh_plugins() {
     CURRENT_STEP="Initializing zsh plugins"
+    local zsh_init_path="$HOME/.local/bin/zsh-init"
     
-    if [[ -x "$HOME/.local/bin/zsh-init" ]]; then
-        "$HOME/.local/bin/zsh-init"
+    if [[ ! -x "$zsh_init_path" ]]; then
+        echo "⚠️  Zsh init skipped (zsh-init not found)"
+        add_note "Zsh init skipped - zsh-init script not found"
+        return
+    fi
+    
+    if ! "$zsh_init_path"; then
+        echo "⚠️  Zsh init encountered issues (non-fatal)"
+        add_note "Zsh init had issues - run zsh-init manually if needed"
     else
-        echo "⚠️  zsh-init script not found, skipping zsh cache generation"
-        add_note "Run 'zsh-init' manually after stow to generate zsh cache files"
+        echo "✅ Zsh plugins initialized"
     fi
 }
 
@@ -239,7 +254,7 @@ launch_apps() {
     local apps_launched=()
     local apps_missing=()
     
-    for app in "AeroSpace" "Mos" "Hidden Bar"; do
+    for app in "AeroSpace" "Mos" "Hidden Bar" "Ghostty"; do
         if [[ -d "/Applications/$app.app" ]]; then
             xattr -d com.apple.quarantine "/Applications/$app.app" 2>/dev/null || true
             open "/Applications/$app.app"
@@ -268,7 +283,7 @@ print_summary() {
         done
         echo ""
     fi
-    echo "✅ Setup complete. Run \"exec zsh\", \"exec nu\", or \"open /Applications/Ghostty.app\"."
+    echo "✅ Setup complete."
 }
 
 # =============================================================================
@@ -276,9 +291,6 @@ print_summary() {
 # =============================================================================
 
 main() {
-    echo "⚠️  This script will modify /etc/zshenv (requires sudo)"
-    echo ""
-    
     check_dependencies
     init_homebrew
     init_submodules

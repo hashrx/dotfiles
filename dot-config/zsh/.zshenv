@@ -2,14 +2,47 @@
 # This env is loaded in all environments
 ##
 
-# Initialize Homebrew (use cache if available for ~50ms speedup)
-if [[ -f "$HOME/.cache/homebrew/shellenv.zsh" ]]; then
-    source "$HOME/.cache/homebrew/shellenv.zsh"
-elif [[ -f /opt/homebrew/bin/brew ]]; then
-    eval "$(/opt/homebrew/bin/brew shellenv)"
-elif [[ -f /usr/local/bin/brew ]]; then
-    eval "$(/usr/local/bin/brew shellenv)"
-fi
+# Lazy zsh-defer wrapper: loads zsh-defer on first use, falls back to immediate execution
+_zsh_defer() {
+    if ! typeset -f zsh-defer > /dev/null; then
+        local zsh_defer_path="${XDG_CONFIG_HOME:-$HOME/.config}/zsh/plugins/zsh-defer/zsh-defer.plugin.zsh"
+        if [[ -f "$zsh_defer_path" ]]; then
+            source "$zsh_defer_path"
+        else
+            # Fallback: run immediately if zsh-defer not available
+            zsh-defer() { "$@" }
+        fi
+    fi
+    zsh-defer "$@"
+}
+
+# Source cached plugin, regenerate if missing
+# Usage: _source_cached <plugin> [defer]
+_source_cached() {
+    local plugin=$1 defer=$2
+    local cache="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/${plugin}.zsh"
+    [[ ! -f "$cache" ]] && zsh-init --$plugin >/dev/null 2>&1
+    if [[ -n "$defer" ]]; then
+        _zsh_defer source "$cache"
+    else
+        source "$cache"
+    fi
+}
+
+# Source file if it exists
+# Usage: _source_if_exists <path> [defer]
+_source_if_exists() {
+    local file=$1 defer=$2
+    [[ ! -f "$file" ]] && return
+    if [[ -n "$defer" ]]; then
+        _zsh_defer source "$file"
+    else
+        source "$file"
+    fi
+}
+
+# Initialize Homebrew (needed early for $HOMEBREW_PREFIX)
+_source_cached brew
 
 # Define the path to the dotfiles directory
 export DOTFILES="${DOTFILES:=$HOME/.dotfiles}"

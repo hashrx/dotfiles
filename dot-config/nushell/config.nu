@@ -5,14 +5,6 @@
 #
 # See https://www.nushell.sh/book/configuration.html
 
-# Source carapace completions
-source $"($nu.cache-dir)/carapace.nu"
-
-# Source zoxide (smart directory jumping)
-# Requires: zoxide init nushell > $"($nu.cache-dir)/zoxide.nu"
-# Note: nushell's `source` requires literal paths, conditional sourcing is not supported
-source $"($nu.cache-dir)/zoxide.nu"
-
 # Disable welcome banner
 $env.config.show_banner = false
 
@@ -25,6 +17,14 @@ $env.config.cursor_shape = {
     vi_normal: block     # block/square for normal mode
     emacs: line          # thin line for emacs mode (fallback)
 }
+
+# Source carapace completions
+source $"($nu.cache-dir)/carapace.nu"
+
+# Source zoxide (smart directory jumping)
+# Requires: zoxide init nushell > $"($nu.cache-dir)/zoxide.nu"
+# Note: nushell's `source` requires literal paths, conditional sourcing is not supported
+source $"($nu.cache-dir)/zoxide.nu"
 
 ##
 # Starship Prompt

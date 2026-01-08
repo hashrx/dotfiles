@@ -1,11 +1,4 @@
-# Load zsh-defer for deferred execution, or fallback to immediate execution
-if [[ -f "$XDG_CONFIG_HOME/zsh/plugins/zsh-defer/zsh-defer.plugin.zsh" ]]; then
-    source "$XDG_CONFIG_HOME/zsh/plugins/zsh-defer/zsh-defer.plugin.zsh"
-else
-    # Fallback: run commands immediately if zsh-defer is not available
-    zsh-defer() { "$@" }
-fi
-
+# Aliases
 alias p="pnpm"
 alias g="git"
 alias ls="eza"
@@ -14,17 +7,20 @@ alias vi="nvim"
 alias vim="nvim"
 alias dotfiles="make -C ~/.dotfiles"
 
-# HISTFILE, HISTSIZE, and SAVEHIST must be set here (not .zshenv) because macOS /etc/zshrc overwrites it
-export HISTFILE="$XDG_STATE_HOME/zsh_history"
-export HISTSIZE=10000
-export SAVEHIST=10000
+# Source plugins
+_source_cached starship
+_source_cached fnm defer
+_source_cached zoxide defer
+_source_cached fzf defer
+_source_cached vivid defer
+_source_if_exists "$GHOSTTY_RESOURCES_DIR/shell-integration/zsh/ghostty-integration"
+_source_if_exists "$HOMEBREW_PREFIX/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh" defer
+_source_if_exists "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh" defer
+_source_if_exists "$HOMEBREW_PREFIX/opt/zsh-fast-syntax-highlighting/share/zsh-fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh" defer
+_source_if_exists "$XDG_CONFIG_HOME/zsh/plugins/fzf-tab/fzf-tab.plugin.zsh" defer
+_source_if_exists "$XDG_CONFIG_HOME/zsh/plugins/fzf-git/fzf-git.sh" defer
 
-if [[ -f "$XDG_CACHE_HOME/zsh/starship.zsh" ]]; then
-    source "$XDG_CACHE_HOME/zsh/starship.zsh"
-else
-    eval "$(starship init zsh)"
-fi
-
+# Completion
 zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/zcompcache"
 zstyle ':completion:*:descriptions' format '[%d]'
 zstyle ':completion:*:git-checkout:*' sort false
@@ -40,48 +36,18 @@ autoload -Uz compinit
 
 fpath=($HOMEBREW_PREFIX/share/zsh-completions $XDG_CONFIG_HOME/zsh/completions $fpath)
 
-if [[ -n $GHOSTTY_RESOURCES_DIR ]]; then
-  source "$GHOSTTY_RESOURCES_DIR"/shell-integration/zsh/ghostty-integration
+# Ensure cache directory exists for completion dump
+if [[ -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh" ]]; then 
+  mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
 fi
+zsh-defer compinit -u -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump"
 
-# Workaround for man x fast-syntax-highlighting freeze
-# See https://github.com/zdharma-continuum/fast-syntax-highlighting/issues/27#issuecomment-1267278072
-function whatis() { if [[ -v THEFD ]]; then :; else command whatis "$@"; fi; }
-
-[[ -f "$HOMEBREW_PREFIX/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh" ]] && zsh-defer source "$HOMEBREW_PREFIX/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh"
-[[ -f "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]] && zsh-defer source "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
-[[ -f "$HOMEBREW_PREFIX/opt/zsh-fast-syntax-highlighting/share/zsh-fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh" ]] && zsh-defer source "$HOMEBREW_PREFIX/opt/zsh-fast-syntax-highlighting/share/zsh-fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh"
-
-if [[ -f "$XDG_CACHE_HOME/zsh/fnm.zsh" ]]; then
-    zsh-defer source "$XDG_CACHE_HOME/zsh/fnm.zsh"
-else
-    zsh-defer eval "$(fnm env --use-on-cd --corepack-enabled --resolve-engines --version-file-strategy=recursive --shell zsh)"
-fi
-if [[ -f "$XDG_CACHE_HOME/zsh/zoxide.zsh" ]]; then
-    zsh-defer source "$XDG_CACHE_HOME/zsh/zoxide.zsh"
-else
-    zsh-defer eval "$(zoxide init zsh)"
-fi
-
+# Key bindings
 zsh-defer zle -N up-line-or-beginning-search
 zsh-defer zle -N down-line-or-beginning-search
 
-# Ensure cache directory exists for completion dump
-mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
-zsh-defer compinit -u -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump"
-zsh-defer source "$XDG_CONFIG_HOME/zsh/plugins/fzf-tab/fzf-tab.plugin.zsh"
-zsh-defer source "$XDG_CONFIG_HOME/zsh/plugins/fzf-git/fzf-git.sh"
-
-if [[ -f "$XDG_CACHE_HOME/vivid/ls_colors" ]]; then
-    zsh-defer export LS_COLORS="$(< $XDG_CACHE_HOME/vivid/ls_colors)"
-else
-    zsh-defer eval 'export LS_COLORS="$(vivid generate tokyonight-night)"'
-fi
-
-# Key bindings (insert mode only)
+# Key bindings: insert mode
 function zvm_after_init() { 
-  source <(fzf --zsh)
-
   zvm_bindkey viins '^B' clear-screen
   zvm_bindkey viins '^N' up-line-or-beginning-search
   zvm_bindkey viins '^P' down-line-or-beginning-search
@@ -100,7 +66,7 @@ function zvm_after_init() {
   done
 }
 
-# Lazy keybindings (visual and command mode)
+# Lazy keybindings: visual and command mode
 function zvm_after_lazy_keybindings() {
   zvm_bindkey vicmd '^B' clear-screen
   zvm_bindkey vicmd '^N' up-line-or-beginning-search
@@ -122,6 +88,7 @@ function zvm_after_lazy_keybindings() {
   done
 }
 
+# Go to git repository root directory
 function repo() {
   if ! git_root="$(git rev-parse --show-toplevel 2>/dev/null)"; then
     echo "Not a git repository" >&2
@@ -130,3 +97,12 @@ function repo() {
 
   cd "$git_root"
 }
+
+# Workaround for man x fast-syntax-highlighting freeze
+# See https://github.com/zdharma-continuum/fast-syntax-highlighting/issues/27#issuecomment-1267278072
+function whatis() { if [[ -v THEFD ]]; then :; else command whatis "$@"; fi; }
+
+# HISTFILE, HISTSIZE, and SAVEHIST must be set here (not .zshenv) because macOS /etc/zshrc overwrites it
+export HISTFILE="$XDG_STATE_HOME/zsh_history"
+export HISTSIZE=10000
+export SAVEHIST=10000

@@ -1,6 +1,6 @@
 #!/bin/bash
-# Regenerate zsh cache files for faster shell startup
-# Usage: zsh-init [--brew] [--vivid] [--fnm] [--zoxide] [--starship] [--all] [--help]
+# Generate zsh cache files for faster shell startup
+# Usage: zsh-init [--brew] [--vivid] [--fnm] [--zoxide] [--starship] [--fzf] [--all] [--help]
 # If no arguments provided, defaults to --all
 
 set -euo pipefail
@@ -12,21 +12,22 @@ show_help() {
     cat <<EOF
 Usage: zsh-init [OPTIONS]
 
-Regenerate zsh cache files for faster shell startup.
+Generate zsh cache files for faster shell startup.
 
 Options:
-  --brew      Regenerate homebrew shellenv cache
-  --vivid     Regenerate vivid LS_COLORS cache
-  --fnm       Regenerate fnm environment cache
-  --zoxide    Regenerate zoxide init cache
-  --starship  Regenerate starship init cache
-  --all       Regenerate all caches (default if no options)
+  --brew      Generate homebrew shellenv cache
+  --vivid     Generate vivid LS_COLORS cache
+  --fnm       Generate fnm environment cache
+  --zoxide    Generate zoxide init cache
+  --starship  Generate starship init cache
+  --fzf       Generate fzf init cache
+  --all       Generate all caches (default if no options)
   --help      Show this help message
 
 Examples:
-  zsh-init              # Regenerate all caches
-  zsh-init --brew       # Only regenerate homebrew cache
-  zsh-init --fnm --zoxide  # Regenerate fnm and zoxide caches
+  zsh-init                 # Generate all cache files
+  zsh-init --brew          # Generate only homebrew
+  zsh-init --fnm --zoxide  # Generate fnm and zoxide
 EOF
 }
 
@@ -52,6 +53,7 @@ do_vivid=false
 do_fnm=false
 do_zoxide=false
 do_starship=false
+do_fzf=false
 
 # If no args, default to all
 if [[ $# -eq 0 ]]; then
@@ -67,16 +69,17 @@ for arg in "$@"; do
         --fnm) do_fnm=true ;;
         --zoxide) do_zoxide=true ;;
         --starship) do_starship=true ;;
+        --fzf) do_fzf=true ;;
         --help) show_help; exit 0 ;;
         *) echo "Unknown option: $arg"; show_help; exit 1 ;;
     esac
 done
 
-echo "Regenerating zsh cache files..."
+echo "Generating zsh cache files..."
 
 # Homebrew shellenv
 if [[ "$do_all" == true || "$do_brew" == true ]]; then
-    brew_cache="$XDG_CACHE_HOME/homebrew/shellenv.zsh"
+    brew_cache="$XDG_CACHE_HOME/zsh/brew.zsh"
     if [[ -f /opt/homebrew/bin/brew ]]; then
         generate_cache "homebrew" "$brew_cache" "/opt/homebrew/bin/brew shellenv"
     elif [[ -f /usr/local/bin/brew ]]; then
@@ -88,7 +91,7 @@ fi
 
 # Vivid LS_COLORS
 if [[ "$do_all" == true || "$do_vivid" == true ]]; then
-    generate_cache "vivid" "$XDG_CACHE_HOME/vivid/ls_colors" "vivid generate tokyonight-night"
+    generate_cache "vivid" "$XDG_CACHE_HOME/zsh/vivid.zsh" "echo \"export LS_COLORS='\$(vivid generate tokyonight-night)'\""
 fi
 
 # fnm environment
@@ -106,4 +109,7 @@ if [[ "$do_all" == true || "$do_starship" == true ]]; then
     generate_cache "starship" "$XDG_CACHE_HOME/zsh/starship.zsh" "starship init zsh"
 fi
 
-echo "Done."
+# fzf init
+if [[ "$do_all" == true || "$do_fzf" == true ]]; then
+    generate_cache "fzf" "$XDG_CACHE_HOME/zsh/fzf.zsh" "fzf --zsh"
+fi

@@ -1,5 +1,5 @@
 #!/bin/bash
-# Regenerate nushell cache files for faster shell startup
+# Generate nushell cache files for faster shell startup
 # Usage: nu-init [--carapace] [--zoxide] [--starship] [--all] [--help]
 # If no arguments provided, defaults to --all
 
@@ -11,19 +11,19 @@ show_help() {
     cat << 'EOF'
 Usage: nu-init [OPTIONS]
 
-Regenerate nushell cache files for faster shell startup.
+Generate nushell cache files for faster shell startup.
 
 Options:
-    --carapace    Regenerate carapace completions
-    --zoxide      Regenerate zoxide integration
-    --starship    Regenerate starship prompt
-    --all         Regenerate all cache files (default if no args)
+    --carapace    Generate carapace completions
+    --zoxide      Generate zoxide integration
+    --starship    Generate starship prompt
+    --all         Generate all cache files (default if no args)
     --help        Show this help message
 
 Examples:
-    nu-init                     # Regenerate all cache files
-    nu-init --starship          # Regenerate only starship
-    nu-init --carapace --zoxide # Regenerate carapace and zoxide
+    nu-init                     # Generate all cache files
+    nu-init --starship          # Generate only starship
+    nu-init --carapace --zoxide # Generate carapace and zoxide
 EOF
 }
 
@@ -63,6 +63,8 @@ for arg in "$@"; do
         *) echo "Unknown option: $arg"; show_help; exit 1 ;;
     esac
 done
+
+echo "Generating nushell cache files..."
 
 # Run selected plugins
 if [[ "$do_all" == true || "$do_carapace" == true ]]; then
