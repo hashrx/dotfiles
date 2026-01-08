@@ -112,7 +112,7 @@ $env.PATH = ($env.PATH | prepend $env.PNPM_HOME | uniq)
 ##
 # Load all fnm environment variables at once
 if (which fnm | is-not-empty) {
-    fnm env --json | from json | load-env
+    fnm env --json --corepack-enabled --resolve-engines --version-file-strategy=recursive | from json | load-env
     $env.PATH = ($env.PATH | prepend ($env.FNM_MULTISHELL_PATH | path join "bin") | uniq)
 }
 

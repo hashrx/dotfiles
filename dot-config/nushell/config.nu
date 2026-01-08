@@ -102,7 +102,7 @@ def --env repo [] {
 # --version-file-strategy=recursive: looks for .nvmrc/.node-version/package.json in parent dirs (monorepo support)
 # --silent-if-unchanged: suppresses output when version doesn't change or no version file exists
 $env.config.hooks.env_change.PWD = ($env.config.hooks.env_change.PWD? | default [] | append {
-    code: "fnm use --version-file-strategy=recursive --silent-if-unchanged"
+    code: "fnm use --silent-if-unchanged"
 })
 
 ##
