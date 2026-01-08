@@ -206,11 +206,11 @@ $env.config.keybindings ++= [
             }
         ]
     }
-    # Ctrl+D: FZF directory finder and cd
+    # Ctrl+E: FZF directory finder and cd
     {
         name: fuzzy_cd
         modifier: control
-        keycode: char_d
+        keycode: char_e
         mode: [vi_insert vi_normal]
         event: [
             {
