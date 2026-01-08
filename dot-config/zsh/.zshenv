@@ -89,6 +89,7 @@ export PYTHON_HISTORY="$XDG_STATE_HOME/python_history"
 export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
 export WORKON_HOME="$XDG_DATA_HOME/virtualenvs"
 export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
+export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship.toml"
 
 # General environment variables
 export EDITOR="nvim"
