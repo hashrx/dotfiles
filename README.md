@@ -1,6 +1,34 @@
 # Dotfiles
 
-This repository hosts configuration files for macOS.
+Configuration files for macOS with Colemak DH navigation, dual-shell support (Zsh & Nushell), and TokyoNight theming throughout.
+
+## Features
+
+### Shell (Zsh & Nushell)
+
+| Feature                                           | Zsh    | Nushell  |
+| ------------------------------------------------- | ------ | -------- |
+| Vi-mode                                           | Yes    | Yes      |
+| Starship prompt                                   | Yes    | Yes      |
+| Zoxide, Carapace, fnm                             | Yes    | Yes      |
+| Autosuggestions                                   | Plugin | Built-in |
+| Syntax highlighting                               | Plugin | Built-in |
+| fzf: history, files, cd                           | Yes    | Yes      |
+| fzf-git keybindings (`Ctrl+G *`)                  | Yes    | -        |
+| fzf-git commands (`gsw`, `gls`, `gsha`, `gstash`) | -      | Yes      |
+| fzf-tab completions                               | Yes    | -        |
+
+### Apps
+
+- **AeroSpace** - Tiling WM with Colemak DH navigation, workspaces, multi-monitor
+- **Ghostty** - TokyoNight theme, transparency, Colemak DH splits, vim scrollback
+- **Neovim** - LazyVim, Copilot, OpenCode, Colemak DH, TypeScript/Zig/Nushell
+- **Git** - Delta pager, SSH signing, git-branchless, custom aliases
+
+### Utilities
+
+- **Homebrew** - `brew add/delete/sync/dump` to manage Brewfile
+- **Setup** - Touch ID for sudo, SSH keygen + GitHub upload, XDG compliance
 
 ## Requirements
 
@@ -12,7 +40,7 @@ Install Homebrew:
 
 ## Installation
 
-Clone the repository in your home directory:
+Clone the repository:
 
 ```sh
 git clone https://github.com/uncrft/dotfiles.git ~/.dotfiles
@@ -24,35 +52,40 @@ Run the setup script:
 ~/.dotfiles/setup.sh
 ```
 
+The script will prompt for your Git name and email addresses. Personal email is used globally, work email is used in `~/Developer/work`.
+
+> **Note:** The script requires `sudo` for:
+>
+> - `/etc/zshenv` - Source XDG-compliant zsh config from the system-wide zshenv
+> - `/etc/pam.d/sudo_local` - Enable Touch ID for sudo authentication
+
 ## Usage
 
 ```sh
-# Create or update symlinks
+# Create or update symlinks (from anywhere)
+dotfiles
+
+# Or from the repo
 make
-
-# Delete symlinks
 make uninstall
-```
 
-## Homebrew aliases
+# Regenerate shell caches after tool updates
+zsh-init
+nu-init
 
-```sh
-# Install package and update Brewfile
-brew add [package]
+# Setup SSH key and upload to GitHub
+setup-ssh
 
-# Uninstall package and update Brewfile
-brew delete [package]
-
-# Clean up installed packages to match Brewfile
-brew sync
-
-# Update Brewfile with currently installed packages
-brew dump
+# Homebrew package management
+brew add <package>     # Install and update Brewfile
+brew delete <package>  # Uninstall and update Brewfile
+brew sync              # Clean up to match Brewfile
+brew dump              # Update Brewfile with installed packages
 ```
 
 ## Keybinding Reference
 
-### Colemak DH Navigation (NEIO instead of HJKL)
+### Colemak DH
 
 This configuration uses Colemak DH keyboard layout. Navigation keys are remapped from QWERTY's HJKL to NEIO:
 
@@ -67,10 +100,7 @@ This configuration uses Colemak DH keyboard layout. Navigation keys are remapped
 
 **Neovim** - Window navigation:
 
-- `Ctrl+N` - Focus window left
-- `Ctrl+E` - Focus window down
-- `Ctrl+I` - Focus window up
-- `Ctrl+O` - Focus window right
+- `Ctrl+N/E/I/O` - Focus window in direction
 
 **AeroSpace** - Window/workspace navigation:
 
@@ -79,22 +109,11 @@ This configuration uses Colemak DH keyboard layout. Navigation keys are remapped
 
 **Ghostty** - Split navigation:
 
-- `Ctrl+Shift+N` - Focus split left
-- `Ctrl+Shift+E` - Focus split down
-- `Ctrl+Shift+I` - Focus split up
-- `Ctrl+Shift+O` - Focus split right
+- `Ctrl+Shift+N/E/I/O` - Focus split in direction
 
-### Shell keybindings (Zsh and Nushell)
+### fzf-git bindings (Zsh only)
 
-| Keybinding | Zsh | Nushell | Description                |
-| ---------- | --- | ------- | -------------------------- |
-| `Ctrl+R`   | Yes | Yes     | Fuzzy history search (fzf) |
-| `Ctrl+F`   | Yes | Yes     | Fuzzy file finder (fzf)    |
-| `Ctrl+E`   | Yes | -       | Fuzzy cd (fzf)             |
-| `Ctrl+D`   | -   | Yes     | Fuzzy cd (fzf)             |
-| `Ctrl+G*`  | Yes | -       | Git helpers (fzf-git)      |
-
-**fzf-git bindings** (Zsh only, all prefixed with `Ctrl+G`):
+All prefixed with `Ctrl+G`:
 
 - `Ctrl+G Ctrl+F` - Files
 - `Ctrl+G Ctrl+B` - Branches
@@ -102,3 +121,5 @@ This configuration uses Colemak DH keyboard layout. Navigation keys are remapped
 - `Ctrl+G Ctrl+H` - Commit hashes
 - `Ctrl+G Ctrl+R` - Remotes
 - `Ctrl+G Ctrl+S` - Stashes
+
+> **Note:** Nushell does not support key sequences, so fzf-git bindings are not available. Use the CLI alternatives instead: `gsw` (switch branch), `gls` (files), `gsha` (commit hashes), `gstash` (stashes).
