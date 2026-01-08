@@ -34,13 +34,17 @@ autoload -Uz up-line-or-beginning-search
 autoload -Uz down-line-or-beginning-search
 autoload -Uz compinit
 
-fpath=($HOMEBREW_PREFIX/share/zsh-completions $XDG_CONFIG_HOME/zsh/completions $fpath)
+fpath=($HOMEBREW_PREFIX/share/zsh-completions $fpath)
 
 # Ensure cache directory exists for completion dump
-if [[ -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh" ]]; then 
+if [[ ! -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh" ]]; then 
   mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
 fi
-zsh-defer compinit -u -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump"
+
+# Carapace completions - must be initialized AFTER compinit
+# Using a single deferred block ensures correct ordering
+export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense'
+zsh-defer -c 'compinit -u -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump" && source <(carapace _carapace)'
 
 # Key bindings
 zsh-defer zle -N up-line-or-beginning-search
