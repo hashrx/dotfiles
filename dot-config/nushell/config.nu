@@ -21,6 +21,10 @@ $env.config.cursor_shape = {
 # Source carapace completions
 source $"($nu.cache-dir)/carapace.nu"
 
+# Source vivid LS_COLORS
+# Requires: vivid generate tokyonight-night > $"($nu.cache-dir)/vivid.nu"
+source $"($nu.cache-dir)/vivid.nu"
+
 # Source zoxide (smart directory jumping)
 # Requires: zoxide init nushell > $"($nu.cache-dir)/zoxide.nu"
 # Note: nushell's `source` requires literal paths, conditional sourcing is not supported

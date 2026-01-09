@@ -1,6 +1,6 @@
 #!/bin/bash
 # Generate nushell cache files for faster shell startup
-# Usage: nu-init [--carapace] [--zoxide] [--starship] [--all] [--help]
+# Usage: nu-init [--carapace] [--vivid] [--zoxide] [--starship] [--all] [--help]
 # If no arguments provided, defaults to --all
 
 set -euo pipefail
@@ -15,6 +15,7 @@ Generate nushell cache files for faster shell startup.
 
 Options:
     --carapace    Generate carapace completions
+    --vivid       Generate vivid LS_COLORS
     --zoxide      Generate zoxide integration
     --starship    Generate starship prompt
     --all         Generate all cache files (default if no args)
@@ -44,6 +45,7 @@ generate_cache() {
 # Parse arguments
 do_all=false
 do_carapace=false
+do_vivid=false
 do_zoxide=false
 do_starship=false
 
@@ -57,6 +59,7 @@ for arg in "$@"; do
     case "$arg" in
         --all) do_all=true ;;
         --carapace) do_carapace=true ;;
+        --vivid) do_vivid=true ;;
         --zoxide) do_zoxide=true ;;
         --starship) do_starship=true ;;
         --help) show_help; exit 0 ;;
@@ -69,6 +72,10 @@ echo "Generating nushell cache files..."
 # Run selected plugins
 if [[ "$do_all" == true || "$do_carapace" == true ]]; then
     generate_cache "carapace" "$XDG_CACHE_HOME/nushell/carapace.nu" "carapace _carapace nushell"
+fi
+
+if [[ "$do_all" == true || "$do_vivid" == true ]]; then
+    generate_cache "vivid" "$XDG_CACHE_HOME/nushell/vivid.nu" "echo \"\\\$env.LS_COLORS = '\$(vivid generate tokyonight-night)'\""
 fi
 
 if [[ "$do_all" == true || "$do_zoxide" == true ]]; then
