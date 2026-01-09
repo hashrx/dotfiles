@@ -101,10 +101,9 @@ def --env repo [] {
 # Hooks
 ##
 # fnm: Auto-switch Node version on directory change
-# --version-file-strategy=recursive: looks for .nvmrc/.node-version/package.json in parent dirs (monorepo support)
-# --silent-if-unchanged: suppresses output when version doesn't change or no version file exists
+# --install-if-missing: auto-installs missing versions (interactive prompt doesn't work in nushell hooks)
 $env.config.hooks.env_change.PWD = ($env.config.hooks.env_change.PWD? | default [] | append {
-    code: "fnm use --silent-if-unchanged"
+    code: "fnm use --silent-if-unchanged --install-if-missing"
 })
 
 ##
