@@ -72,10 +72,6 @@ brew "zsh-autosuggestions"
 brew "zsh-completions"
 # Feature-rich syntax highlighting for Zsh
 brew "zsh-fast-syntax-highlighting"
-# Better and friendly vi(vim) mode plugin for ZSH
-brew "zsh-vi-mode"
-# A window border system for macOS
-brew "felixkratz/formulae/borders"
 # Incredibly fast JavaScript runtime, bundler, transpiler and package manager - all in one.
 brew "oven-sh/bun/bun"
 # The AI coding agent built for the terminal.

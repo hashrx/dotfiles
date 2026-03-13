@@ -54,10 +54,10 @@ keybind = shift+right=adjust_selection:right
 keybind = ctrl+shift+comma=reload_config
 keybind = ctrl+alt+i=inspector:toggle
 
-keybind = ctrl+shift+n=goto_split:left
-keybind = ctrl+shift+e=goto_split:down
-keybind = ctrl+shift+i=goto_split:up
-keybind = ctrl+shift+o=goto_split:right
+keybind = ctrl+shift+h=goto_split:left
+keybind = ctrl+shift+j=goto_split:down
+keybind = ctrl+shift+k=goto_split:up
+keybind = ctrl+shift+l=goto_split:right
 keybind = ctrl+shift+left_bracket=goto_split:previous
 keybind = ctrl+shift+right_bracket=goto_split:next
 

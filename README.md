@@ -85,32 +85,6 @@ brew dump              # Update Brewfile with installed packages
 
 ## Keybinding Reference
 
-### Colemak DH
-
-This configuration uses Colemak DH keyboard layout. Navigation keys are remapped from QWERTY's HJKL to NEIO:
-
-| QWERTY | Colemak DH | Direction |
-| ------ | ---------- | --------- |
-| H      | N          | Left      |
-| J      | E          | Down      |
-| K      | I          | Up        |
-| L      | O          | Right     |
-
-### Application-specific navigation
-
-**Neovim** - Window navigation:
-
-- `Ctrl+N/E/I/O` - Focus window in direction
-
-**AeroSpace** - Window/workspace navigation:
-
-- `Ctrl+Alt+N/E/I/O` - Focus window in direction
-- `Alt+Shift+N/E/I/O` - Move window in direction
-
-**Ghostty** - Split navigation:
-
-- `Ctrl+Shift+N/E/I/O` - Focus split in direction
-
 ### fzf-git bindings (Zsh only)
 
 All prefixed with `Ctrl+G`:

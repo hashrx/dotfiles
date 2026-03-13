@@ -1,6 +1,7 @@
 # Global gitignore
 .DS_Store
 .vscode
+.idea
 .env
 *.swp
 

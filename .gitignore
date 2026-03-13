@@ -1,4 +1,5 @@
 .DS_Store
+.idea
 dot-config/raycast
 dot-config/git/user
 dot-config/git/work

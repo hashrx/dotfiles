@@ -10,27 +10,6 @@
     "enabled": false,
     "turns": 4
   },
-  // LLM-driven context pruning tools
-  "tools": {
-    // Shared settings for all prune tools
-    "settings": {
-      // Nudge the LLM to use prune tools (every <nudgeFrequency> tool results)
-      "nudgeEnabled": true,
-      "nudgeFrequency": 10,
-      // Additional tools to protect from pruning
-      "protectedTools": []
-    },
-    // Removes tool content from context without preservation (for completed tasks or noise)
-    "discard": {
-      "enabled": true
-    },
-    // Distills key findings into preserved knowledge before removing raw content
-    "extract": {
-      "enabled": true,
-      // Show distillation content as an ignored message notification
-      "showDistillation": false
-    }
-  },
   // Automatic pruning strategies
   "strategies": {
     // Remove duplicate tool calls (same tool with same arguments)
