@@ -43,7 +43,7 @@ Install Homebrew:
 Clone the repository:
 
 ```sh
-git clone https://github.com/uncrft/dotfiles.git ~/.dotfiles
+git clone https://github.com/hashrx/dotfiles ~/.dotfiles
 ```
 
 Run the setup script:
